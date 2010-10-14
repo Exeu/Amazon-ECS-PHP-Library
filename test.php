@@ -8,8 +8,8 @@ require 'lib/AmazonECS.class.php';
 
 try
 {
-    $amazonEcs = new AmazonECS("", "");
-    $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
+    $amazonEcs = new AmazonECS('', '', 'DE');
+    $response = $amazonEcs->category('DVD')->responseGroup('Images')->country('US')->search("Matrix Revolutions");
 
     // vardumping the response
     var_dump($response);

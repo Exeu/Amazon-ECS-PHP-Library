@@ -37,14 +37,14 @@ class AmazonECS
    */
   private $responseConfig = array(
     'returnType' => self::RETURN_TYPE_OBJECT,
-    'responseGroup' => 'Small'
+    'responseGroup' => 'Small',
   );
 
   /**
    * @param string $accessKey
    * @param string $secretKey
    */
-  public function __construct($accessKey, $secretKey)
+  public function __construct($accessKey, $secretKey, $country = 'DE')
   {
     if (empty($accessKey) || empty($secretKey))
     {
@@ -53,6 +53,7 @@ class AmazonECS
 
     $this->requestConfig['accessKey']   = $accessKey;
     $this->requestConfig['secretKey']   = $secretKey;
+    $this->responseConfig['country']    = $country;
   }
 
   public function search($pattern)
@@ -82,6 +83,16 @@ class AmazonECS
         array('ResponseGroup' => $this->responseConfig['responseGroup'])
       )
     );
+  }
+
+  public function country($country = null)
+  {
+    if (null !== $country)
+    {
+      $this->responseConfig['country'] = $country;
+    }
+
+    return $this;
   }
 
   public function category($category = null)
@@ -173,7 +184,7 @@ class AmazonECS
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
-      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/DE/AWSECommerceService.wsdl',
+      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/'.strtoupper($this->responseConfig['country']).'/AWSECommerceService.wsdl',
       array('exceptions' => 0)
     );
 
