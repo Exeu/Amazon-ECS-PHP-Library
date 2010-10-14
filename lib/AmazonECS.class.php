@@ -15,18 +15,29 @@
 class AmazonECS
 {
   /**
-   * Baseconfigurationstorage
+   * Basic Responsetypes
+   * @var integer
+   * @var integer
+   */
+  const RETURN_TYPE_ARRAY  = 1;
+  const RETURN_TYPE_OBJECT = 2;
 
+  /**
+   * Baseconfigurationstorage
+   *
    * @var array
    */
   private $requestConfig = array();
 
+
   /**
-   * Pattern for GET header
+   * Responseconfig
    *
-   * @var $requestHeaderPattern
+   * @var array
    */
-  private $requestHeaderPattern = "GET\n%HOST%\n/onca/xml\n";
+  private $responeConfig = array(
+    'returnType' => self::RETURN_TYPE_OBJECT
+  );
 
   /**
    * @param string $accessKey
@@ -43,13 +54,13 @@ class AmazonECS
     $this->requestConfig['secretKey']   = $secretKey;
   }
 
-  public function search($options)
+  public function search($pattern)
   {
     if (false === isset($this->requestConfig['category']))
     {
       throw new Exception('No Category given: Please set it up before');
     }
-     
+
     $params = array(
       'AWSAccessKeyId' => $this->requestConfig['accessKey'],
       'Request' => array(
@@ -58,9 +69,9 @@ class AmazonECS
       'SearchIndex' => $this->requestConfig['category'])
     );
 
-    $this->performSoapRequest("ItemSearch", $params);
-    
-    return $this;
+    return $this->returnData(
+      $this->performSoapRequest("ItemSearch", $params)
+    );
   }
 
   public function category($category = null)
@@ -71,17 +82,62 @@ class AmazonECS
     }
 
     $this->requestConfig['category'] = $category;
-    
+
     return $this;
+  }
+
+  public function setReturnType($type)
+  {
+    $this->responeConfig['returnType'] = $type;
+    return $this;
+  }
+
+  protected function returnData($object)
+  {
+    switch ($this->responeConfig['returnType'])
+    {
+      case self::RETURN_TYPE_OBJECT:
+        return $object;
+      break;
+
+      case self::RETURN_TYPE_ARRAY:
+        return $this->objectToArray($object);
+      break;
+
+      default:
+        return false;
+      break;
+    }
+  }
+
+  protected function objectToArray($object)
+  {
+    $out = array();
+    foreach ($object as $key => $value)
+    {
+      switch(true)
+      {
+        case is_object($value):
+          $out[$key] = $this->objectToArray($value);
+          break;
+        case is_array($value):
+          $out[$key] = $this->objectToArray($value);
+        break;
+      default:
+        $out[$key] = $value;
+      }
+    }
+    return $out;
   }
 
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
-      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/DE/AWSECommerceService.wsdl', 
+      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/DE/AWSECommerceService.wsdl',
       array('exceptions' => 0)
     );
-    $soapClient->__setSoapHeaders($this->builSoapHeader($function));
+
+    $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
 
     return $soapClient->__soapCall($function, array($params));
   }
@@ -100,17 +156,17 @@ class AmazonECS
 
     return array(
       new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/', 
-        'AWSAccessKeyId',  
+        'http://security.amazonaws.com/doc/2007-01-01/',
+        'AWSAccessKeyId',
         $this->requestConfig['accessKey']
       ),
       new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/', 
-        'Timestamp',  
+        'http://security.amazonaws.com/doc/2007-01-01/',
+        'Timestamp',
         $timeStamp
       ),
       new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/', 
+        'http://security.amazonaws.com/doc/2007-01-01/',
         'Signature',
         $signature
       )

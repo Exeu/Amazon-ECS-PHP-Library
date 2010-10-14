@@ -6,14 +6,20 @@ if ("cli" !== PHP_SAPI)
 
 require 'lib/AmazonECS.class.php';
 
-
-try 
+try
 {
-    $test = new AmazonECS("", "");
-    $test->category('DVD')->search("Matrix Revolutions");
+    $amazonEcs = new AmazonECS("", "");
+    $response = $amazonEcs->category('DVD')->search("Matrix Revolutions");
+
+    // vardumping the response
+    var_dump($response);
 }
 catch(Exception $e)
 {
   echo $e->getMessage();
 }
 
+if ("cli" !== PHP_SAPI)
+{
+    echo "</pre>";
+}
