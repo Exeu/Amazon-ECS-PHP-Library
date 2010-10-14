@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Amazon ECS Class
  * http://www.amazon.com
@@ -46,7 +45,6 @@ class AmazonECS
 
   public function search($pattern)
   {
-
     if (false === isset($this->requestConfig['category']))
     {
       throw new Exception('No Category given: Please set it up before');
@@ -67,6 +65,11 @@ class AmazonECS
 
   public function category($category = null)
   {
+    if (null === $category)
+    {
+      return isset($this->requestConfig['category']) ? $this->requestConfig['category'] : null;
+    }
+
     $this->requestConfig['category'] = $category;
     
     return $this;
