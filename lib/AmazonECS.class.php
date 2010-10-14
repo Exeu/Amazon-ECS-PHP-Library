@@ -35,8 +35,9 @@ class AmazonECS
    *
    * @var array
    */
-  private $responeConfig = array(
-    'returnType' => self::RETURN_TYPE_OBJECT
+  private $responseConfig = array(
+    'returnType' => self::RETURN_TYPE_OBJECT,
+    'responseGroup' => 'Small'
   );
 
   /**
@@ -61,16 +62,25 @@ class AmazonECS
       throw new Exception('No Category given: Please set it up before');
     }
 
-    $params = array(
-      'AWSAccessKeyId' => $this->requestConfig['accessKey'],
-      'Request' => array(
-      'Operation' => 'ItemSearch',
+    $params = $this->buildRequestParams('ItemSearch', array(
       'Keywords' => $pattern,
-      'SearchIndex' => $this->requestConfig['category'])
-    );
+      'SearchIndex' => $this->requestConfig['category']
+    ));
 
     return $this->returnData(
       $this->performSoapRequest("ItemSearch", $params)
+    );
+  }
+
+  protected function buildRequestParams($function, $params)
+  {
+    return array(
+      'AWSAccessKeyId' => $this->requestConfig['accessKey'],
+      'Request' => array_merge(
+        array('Operation' => $function),
+        $params,
+        array('ResponseGroup' => $this->responseConfig['responseGroup'])
+      )
     );
   }
 
@@ -86,15 +96,32 @@ class AmazonECS
     return $this;
   }
 
-  public function setReturnType($type)
+  public function responseGroup($responseGroup = null)
   {
-    $this->responeConfig['returnType'] = $type;
+    if (null !== $responseGroup)
+    {
+      $this->responseConfig['responseGroup'] = $responseGroup;
+    }
+
     return $this;
   }
 
+  public function setReturnType($type)
+  {
+    $this->responseConfig['returnType'] = $type;
+    return $this;
+  }
+
+  /**
+   * Returns the Response either as Array or Array/Object
+   *
+   * @param object $object
+   *
+   * @return mixed
+   */
   protected function returnData($object)
   {
-    switch ($this->responeConfig['returnType'])
+    switch ($this->responseConfig['returnType'])
     {
       case self::RETURN_TYPE_OBJECT:
         return $object;
@@ -110,6 +137,13 @@ class AmazonECS
     }
   }
 
+  /**
+   * Transforms the responseobject to an array
+   *
+   * @param object $object
+   *
+   * @return array An arrayrepresentation of the given object
+   */
   protected function objectToArray($object)
   {
     $out = array();
@@ -130,6 +164,12 @@ class AmazonECS
     return $out;
   }
 
+  /**
+   * @param string $function Name of the function which should be called
+   * @param array $params Requestparameters 'ParameterName' => 'ParameterValue'
+   *
+   * @return array The response as an array with stdClass objects
+   */
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
