@@ -8,7 +8,7 @@ require 'lib/AmazonECS.class.php';
 
 try
 {
-    $amazonEcs = new AmazonECS("AKIAJE5FDEZCRP3YZZDQ", "U2O/i63B/PnuKDQiD8p3oWsOZpxQI6Fqp+kMus9R");
+    $amazonEcs = new AmazonECS("", "");
     $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
 
     // vardumping the response
