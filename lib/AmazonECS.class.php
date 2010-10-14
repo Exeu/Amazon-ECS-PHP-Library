@@ -45,7 +45,7 @@ class AmazonECS
     $this->requestConfig['secretKey']   = $secretKey;
   }
 
-  public function search($pattern)
+  public function search($options)
   {
 
     if(!isset($this->requestConfig['category']))
