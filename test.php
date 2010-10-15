@@ -39,6 +39,13 @@ try
    // Back to DE and looking for some Music !! Warning "Large" produces a lot of Response
    $response = $amazonEcs->country('de')->category('Music')->responseGroup('Large')->search('The Beatles');
    //var_dump($response);
+
+   // Or doing searchs in a loop?
+   for ($i = 1; $i < 4; $i++)
+   {
+     $response = $amazonEcs->search('Matrix ' . $i);
+     var_dump($response);
+   }
 }
 catch(Exception $e)
 {
