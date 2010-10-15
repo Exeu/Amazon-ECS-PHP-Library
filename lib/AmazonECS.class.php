@@ -145,7 +145,9 @@ class AmazonECS
       break;
 
       default:
-        return false;
+        throw new InvalidArgumentException(sprintf(
+          "Unknwon return type %s", $this->responseConfig['returnType']
+        ));
       break;
     }
   }
