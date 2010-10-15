@@ -37,7 +37,7 @@ class AmazonECS
    */
   private $responseConfig = array(
     'returnType' => self::RETURN_TYPE_OBJECT,
-    'responseGroup' => 'Small',
+    'responseGroup' => 'Small'
   );
 
   /**
