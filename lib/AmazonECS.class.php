@@ -36,8 +36,9 @@ class AmazonECS
    * @var array
    */
   private $responseConfig = array(
-    'returnType' => self::RETURN_TYPE_OBJECT,
-    'responseGroup' => 'Small'
+    'returnType'    => self::RETURN_TYPE_OBJECT,
+    'responseGroup' => 'Small',
+    'optionalParameters' => array()
   );
 
   /**
@@ -58,10 +59,10 @@ class AmazonECS
 
   /**
    * execute search
-   * 
+   *
    * @param string $pattern
    *
-   * @return array|object return type depends on setting 
+   * @return array|object return type depends on setting
    *
    * @see returnType()
    */
@@ -82,6 +83,18 @@ class AmazonECS
     );
   }
 
+
+  public function lookup($asin)
+  {
+    $params = $this->buildRequestParams('ItemLookup', array(
+      'ItemId' => $asin,
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("ItemLookup", $params)
+    );
+  }
+
   /**
    * Builds the request parameters
    *
@@ -97,17 +110,43 @@ class AmazonECS
       'Request' => array_merge(
         array('Operation' => $function),
         $params,
-        array('ResponseGroup' => $this->responseConfig['responseGroup'])
+        $this->responseConfig['optionalParameters'],
+        array('ResponseGroup' => $this->prepareResponseGroup())
       )
     );
   }
 
+  public function optionalParameters($params = null)
+  {
+    if (null === $params)
+    {
+      return $this->responseConfig['optionalParameters'];
+    }
+
+    $this->responseConfig['optionalParameters'] = $params;
+
+    return $this;
+  }
+
+  /**
+   * Prepares the responsegroups and returns them as array
+   *
+   * @return array|prepared responsegroups
+   */
+  protected function prepareResponseGroup()
+  {
+    if (false === strstr($this->responseConfig['responseGroup'], ','))
+      return $this->responseConfig['responseGroup'];
+
+    return explode(',', $this->responseConfig['responseGroup']);
+  }
+
   /**
    * Set or get the country
-   * 
-   * if the country argument is null it will return the current 
+   *
+   * if the country argument is null it will return the current
    * country, otherwise it will set the country and reutrn itself.
-   * 
+   *
    * @param string|null $country
    *
    * @return string|AmazonECS depends on country argument
@@ -120,7 +159,7 @@ class AmazonECS
     }
 
     $this->responseConfig['country'] = $country;
-    
+
     return $this;
   }
 
@@ -144,7 +183,7 @@ class AmazonECS
     }
 
     $this->responseConfig['responseGroup'] = $responseGroup;
-    
+
     return $this;
   }
 
@@ -154,9 +193,9 @@ class AmazonECS
     {
       return $this->responseConfig['returnType'];
     }
-    
+
     $this->responseConfig['returnType'] = $type;
-    
+
     return $this;
   }
 
@@ -212,12 +251,12 @@ class AmazonECS
         case is_object($value):
           $out[$key] = $this->objectToArray($value);
         break;
-        
+
         case is_array($value):
           $out[$key] = $this->objectToArray($value);
-        
+
         break;
-        
+
         default:
           $out[$key] = $value;
         break;

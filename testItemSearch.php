@@ -8,9 +8,9 @@ require 'lib/AmazonECS.class.php';
 
 try
 {
-    $amazonEcs = new AmazonECS(YOUR API KEY HERE, YOUR SECRET KEY HERE, 'DE');
+    $amazonEcs = new AmazonECS('API KEY', 'SECRET KEY', 'DE');
 
-    $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
+      $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
     //var_dump($response);
 
     // from now on you want to have pure arrays as response
@@ -44,8 +44,11 @@ try
    for ($i = 1; $i < 4; $i++)
    {
      $response = $amazonEcs->search('Matrix ' . $i);
-     var_dump($response);
+     //var_dump($response);
    }
+
+   $response = $amazonEcs->responseGroup('Small')->optionalParameters(array('ItemPage' => 2))->search('Bruce Willis');
+   //var_dump($response);
 }
 catch(Exception $e)
 {
