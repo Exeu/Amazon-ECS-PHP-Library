@@ -56,6 +56,15 @@ class AmazonECS
     $this->responseConfig['country']    = $country;
   }
 
+  /**
+   * execute search
+   * 
+   * @param string $pattern
+   *
+   * @return array|object return type depends on setting 
+   *
+   * @see returnType()
+   */
   public function search($pattern)
   {
     if (false === isset($this->requestConfig['category']))
@@ -73,7 +82,15 @@ class AmazonECS
     );
   }
 
-  protected function buildRequestParams($function, $params)
+  /**
+   * Builds the request parameters
+   *
+   * @param string $function
+   * @param array  $params
+   *
+   * @return array
+   */
+  protected function buildRequestParams($function, array $params)
   {
     return array(
       'AWSAccessKeyId' => $this->requestConfig['accessKey'],
@@ -85,6 +102,16 @@ class AmazonECS
     );
   }
 
+  /**
+   * Set or get the country
+   * 
+   * if the country argument is null it will return the current 
+   * country, otherwise it will set the country and reutrn itself.
+   * 
+   * @param string|null $country
+   *
+   * @return string|AmazonECS depends on country argument
+   */
   public function country($country = null)
   {
     if (null === $country)
@@ -111,18 +138,34 @@ class AmazonECS
 
   public function responseGroup($responseGroup = null)
   {
-    if (null !== $responseGroup)
+    if (null === $responseGroup)
     {
-      $this->responseConfig['responseGroup'] = $responseGroup;
+      return $this->responseConfig['responseGroup'];
     }
 
+    $this->responseConfig['responseGroup'] = $responseGroup;
+    
     return $this;
   }
 
+  public function returnType($type = null)
+  {
+    if (null === $type)
+    {
+      return $this->responseConfig['returnType'];
+    }
+    
+    $this->responseConfig['returnType'] = $type;
+    
+    return $this;
+  }
+
+  /**
+   * @deprected use returnType() instead
+   */
   public function setReturnType($type)
   {
-    $this->responseConfig['returnType'] = $type;
-    return $this;
+    return $this->returnType($type);
   }
 
   /**
@@ -164,18 +207,23 @@ class AmazonECS
     $out = array();
     foreach ($object as $key => $value)
     {
-      switch(true)
+      switch (true)
       {
         case is_object($value):
           $out[$key] = $this->objectToArray($value);
-          break;
+        break;
+        
         case is_array($value):
           $out[$key] = $this->objectToArray($value);
+        
         break;
-      default:
-        $out[$key] = $value;
+        
+        default:
+          $out[$key] = $value;
+        break;
       }
     }
+
     return $out;
   }
 
