@@ -3,14 +3,12 @@
  * Amazon ECS Class
  * http://www.amazon.com
  *
- *
  * This Class fetchs Data from the Amazon Productdatabase
  * and returns it in different types.
  *
- * More information under http://www.pixel-web.org
- *
+ * @license GPL
+ * @version 0.8
  * @author Jan
- *
  */
 class AmazonECS
 {

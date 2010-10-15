@@ -14,7 +14,7 @@ try
     //var_dump($response);
 
     $response = $amazonEcs->responseGroup('Images')->lookup('B0017TZY5Y');
-    var_dump($response);
+    //var_dump($response);
 }
 catch(Exception $e)
 {
