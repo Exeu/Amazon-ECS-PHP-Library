@@ -87,11 +87,13 @@ class AmazonECS
 
   public function country($country = null)
   {
-    if (null !== $country)
+    if (null === $country)
     {
-      $this->responseConfig['country'] = $country;
+      return $this->responseConfig['country'];
     }
 
+    $this->responseConfig['country'] = $country;
+    
     return $this;
   }
 
