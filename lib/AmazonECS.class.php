@@ -2,13 +2,21 @@
 /**
  * Amazon ECS Class
  * http://www.amazon.com
+ * =====================
  *
- * This Class fetchs Data from the Amazon Productdatabase
- * and returns it in different types.
+ * This class fetchs productinformation via the Product Advertising API by Amazon (formerly ECS).
+ * It supports two basic operations: ItemSearch and ItemLookup.
+ * These operations could be expanded with extra prarmeters to specialize the query.
  *
- * @license GPL
+ * Requirement is the PHP extension SOAP.
+ *
+ * @see: Wiki:   http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki
+ * @see: Source: http://github.com/Exeu/Amazon-ECS-PHP-Library
+ *
+ * @package AmazonECS
+ * @license http://www.gnu.org/licenses/gpl.txt GPL
  * @version 0.8
- * @author Jan
+ * @author  Exeu <exeu65@googlemail.com>
  */
 class AmazonECS
 {

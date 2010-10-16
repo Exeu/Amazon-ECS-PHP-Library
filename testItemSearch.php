@@ -47,7 +47,8 @@ try
      //var_dump($response);
    }
 
-   $response = $amazonEcs->responseGroup('Small')->optionalParameters(array('ItemPage' => 2))->search('Bruce Willis');
+   // Want to have more Repsonsegroups
+   $response = $amazonEcs->responseGroup('Small,Images')->optionalParameters(array('ItemPage' => 2))->search('Bruce Willis');
    //var_dump($response);
 }
 catch(Exception $e)
