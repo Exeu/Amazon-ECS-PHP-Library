@@ -10,13 +10,12 @@
  *
  * Requirement is the PHP extension SOAP.
  *
- * @see: Wiki:   http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki
- * @see: Source: http://github.com/Exeu/Amazon-ECS-PHP-Library
- *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
  * @version 0.8
  * @author  Exeu <exeu65@googlemail.com>
+ * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
+ * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
  */
 class AmazonECS
 {
