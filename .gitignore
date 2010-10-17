@@ -1,3 +1,4 @@
 *.settings
 *.buildpath
-*.projecttestSettings.php
+*.project
+testSettings.php
