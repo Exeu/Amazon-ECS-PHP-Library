@@ -22,7 +22,6 @@ class AmazonECS
   /**
    * Basic Responsetypes
    * @var integer
-   * @var integer
    */
   const RETURN_TYPE_ARRAY  = 1;
   const RETURN_TYPE_OBJECT = 2;
