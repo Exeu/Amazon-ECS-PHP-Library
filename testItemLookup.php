@@ -5,7 +5,8 @@ if ("cli" !== PHP_SAPI)
 }
 
 
-if (is_file('testSesstings.php')) {
+if (is_file('testSettings.php'))
+{
   include 'testSettings.php';
 }
 

@@ -4,7 +4,8 @@ if ("cli" !== PHP_SAPI)
     echo "<pre>";
 }
 
-if (is_file('testSesstings.php')) {
+if (is_file('testSettings.php'))
+{
   include 'testSettings.php';
 }
 
@@ -15,9 +16,13 @@ require 'lib/AmazonECS.class.php';
 
 try
 {
+    // get a new object with your API Key and secret key. Lang is optional.
+    // if you leave lang blank it will be US.
     $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE');
 
-      $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
+
+    // changing the category to DVD and the response to only images and looking for some matrix stuff.
+    $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
     //var_dump($response);
 
     // from now on you want to have pure arrays as response
@@ -54,7 +59,7 @@ try
      //var_dump($response);
    }
 
-   // Want to have more Repsonsegroups
+   // Want to have more Repsonsegroups?                         And Maybe you want to start with resultpage 2?
    $response = $amazonEcs->responseGroup('Small,Images')->optionalParameters(array('ItemPage' => 2))->search('Bruce Willis');
    //var_dump($response);
 }

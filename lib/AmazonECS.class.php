@@ -49,7 +49,7 @@ class AmazonECS
    * @param string $accessKey
    * @param string $secretKey
    */
-  public function __construct($accessKey, $secretKey, $country = 'DE')
+  public function __construct($accessKey, $secretKey, $country = 'US')
   {
     if (empty($accessKey) || empty($secretKey))
     {
@@ -143,7 +143,7 @@ class AmazonECS
   {
     $soapClient = new SoapClient(
       'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/'.strtoupper($this->responseConfig['country']).'/AWSECommerceService.wsdl',
-      array('exceptions' => 0)
+      array('exceptions' => 1)
     );
 
     $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
@@ -182,11 +182,11 @@ class AmazonECS
     );
   }
 
-  /** 
+  /**
    * provides current gm date
    *
    * primary needed for the signature
-   * 
+   *
    * @return string
    */
   final protected function getTimestamp()
@@ -267,7 +267,7 @@ class AmazonECS
    * set or get optional parameters
    *
    * if the argument params is null it will reutrn the current parameters,
-   * otherwise it will set the params.
+   * otherwise it will set the params and return itself.
    *
    * @param array $params the optional parameters
    *
