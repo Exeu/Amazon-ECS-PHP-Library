@@ -1,0 +1,4 @@
+<?php
+define('AWS_API_KEY', 'API KEY');
+define('AWS_API_SECRET_KEY', 'SECRET KEY');
+
