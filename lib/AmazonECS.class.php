@@ -12,7 +12,7 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 0.8
+ * @version 0.9
  * @author  Exeu <exeu65@googlemail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
