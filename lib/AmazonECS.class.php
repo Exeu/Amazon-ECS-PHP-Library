@@ -120,18 +120,6 @@ class AmazonECS
     );
   }
 
-  public function optionalParameters($params = null)
-  {
-    if (null === $params)
-    {
-      return $this->responseConfig['optionalParameters'];
-    }
-
-    $this->responseConfig['optionalParameters'] = $params;
-
-    return $this;
-  }
-
   /**
    * Prepares the responsegroups and returns them as array
    *
@@ -143,6 +131,99 @@ class AmazonECS
       return $this->responseConfig['responseGroup'];
 
     return explode(',', $this->responseConfig['responseGroup']);
+  }
+
+  /**
+   * @param string $function Name of the function which should be called
+   * @param array $params Requestparameters 'ParameterName' => 'ParameterValue'
+   *
+   * @return array The response as an array with stdClass objects
+   */
+  protected function performSoapRequest($function, $params)
+  {
+    $soapClient = new SoapClient(
+      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/'.strtoupper($this->responseConfig['country']).'/AWSECommerceService.wsdl',
+      array('exceptions' => 0)
+    );
+
+    $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
+
+    return $soapClient->__soapCall($function, array($params));
+  }
+
+  /**
+   * Provides some necessary soap headers
+   *
+   * @param string $function
+   *
+   * @return array Each element is a concrete SoapHeader object
+   */
+  protected function buildSoapHeader($function)
+  {
+    $timeStamp = $this->getTimestamp();
+    $signature = $this->buildSignature($function . $timeStamp);
+
+    return array(
+      new SoapHeader(
+        'http://security.amazonaws.com/doc/2007-01-01/',
+        'AWSAccessKeyId',
+        $this->requestConfig['accessKey']
+      ),
+      new SoapHeader(
+        'http://security.amazonaws.com/doc/2007-01-01/',
+        'Timestamp',
+        $timeStamp
+      ),
+      new SoapHeader(
+        'http://security.amazonaws.com/doc/2007-01-01/',
+        'Signature',
+        $signature
+      )
+    );
+  }
+
+  /** 
+   * provides current gm date
+   *
+   * primary needed for the signature
+   * 
+   * @return string
+   */
+  final protected function getTimestamp()
+  {
+    return gmdate("Y-m-d\TH:i:s\Z");
+  }
+
+  /**
+   * provides the signature
+   *
+   * @return string
+   */
+  final protected function buildSignature($request)
+  {
+    return base64_encode(hash_hmac("sha256", $request, $this->requestConfig['secretKey'], true));
+  }
+
+  /**
+   * set or get optional parameters
+   *
+   * if the argument params is null it will reutrn the current parameters,
+   * otherwise it will set the params.
+   *
+   * @param array $params the optional parameters
+   *
+   * @return array|AmazonECS depends on params argument
+   */
+  public function optionalParameters($params = null)
+  {
+    if (null === $params)
+    {
+      return $this->responseConfig['optionalParameters'];
+    }
+
+    $this->responseConfig['optionalParameters'] = $params;
+
+    return $this;
   }
 
   /**
@@ -268,64 +349,5 @@ class AmazonECS
     }
 
     return $out;
-  }
-
-  /**
-   * @param string $function Name of the function which should be called
-   * @param array $params Requestparameters 'ParameterName' => 'ParameterValue'
-   *
-   * @return array The response as an array with stdClass objects
-   */
-  protected function performSoapRequest($function, $params)
-  {
-    $soapClient = new SoapClient(
-      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/'.strtoupper($this->responseConfig['country']).'/AWSECommerceService.wsdl',
-      array('exceptions' => 0)
-    );
-
-    $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
-
-    return $soapClient->__soapCall($function, array($params));
-  }
-
-  /**
-   * Provides some necessary soap headers
-   *
-   * @param string $function
-   *
-   * @return array Each element is a concrete SoapHeader object
-   */
-  protected function buildSoapHeader($function)
-  {
-    $timeStamp = $this->getTimestamp();
-    $signature = $this->buildSignature($function . $timeStamp);
-
-    return array(
-      new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/',
-        'AWSAccessKeyId',
-        $this->requestConfig['accessKey']
-      ),
-      new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/',
-        'Timestamp',
-        $timeStamp
-      ),
-      new SoapHeader(
-        'http://security.amazonaws.com/doc/2007-01-01/',
-        'Signature',
-        $signature
-      )
-    );
-  }
-
-  final protected function getTimestamp()
-  {
-    return gmdate("Y-m-d\TH:i:s\Z");
-  }
-
-  final protected function buildSignature($request)
-  {
-    return base64_encode(hash_hmac("sha256", $request, $this->requestConfig['secretKey'], true));
   }
 }
