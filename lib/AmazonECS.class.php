@@ -205,6 +205,65 @@ class AmazonECS
   }
 
   /**
+   * Returns the Response either as Array or Array/Object
+   *
+   * @param object $object
+   *
+   * @return mixed
+   */
+  protected function returnData($object)
+  {
+    switch ($this->responseConfig['returnType'])
+    {
+      case self::RETURN_TYPE_OBJECT:
+        return $object;
+      break;
+
+      case self::RETURN_TYPE_ARRAY:
+        return $this->objectToArray($object);
+      break;
+
+      default:
+        throw new InvalidArgumentException(sprintf(
+          "Unknwon return type %s", $this->responseConfig['returnType']
+        ));
+      break;
+    }
+  }
+
+  /**
+   * Transforms the responseobject to an array
+   *
+   * @param object $object
+   *
+   * @return array An arrayrepresentation of the given object
+   */
+  protected function objectToArray($object)
+  {
+    $out = array();
+    foreach ($object as $key => $value)
+    {
+      switch (true)
+      {
+        case is_object($value):
+          $out[$key] = $this->objectToArray($value);
+        break;
+
+        case is_array($value):
+          $out[$key] = $this->objectToArray($value);
+
+        break;
+
+        default:
+          $out[$key] = $value;
+        break;
+      }
+    }
+
+    return $out;
+  }
+
+  /**
    * set or get optional parameters
    *
    * if the argument params is null it will reutrn the current parameters,
@@ -290,64 +349,5 @@ class AmazonECS
   public function setReturnType($type)
   {
     return $this->returnType($type);
-  }
-
-  /**
-   * Returns the Response either as Array or Array/Object
-   *
-   * @param object $object
-   *
-   * @return mixed
-   */
-  protected function returnData($object)
-  {
-    switch ($this->responseConfig['returnType'])
-    {
-      case self::RETURN_TYPE_OBJECT:
-        return $object;
-      break;
-
-      case self::RETURN_TYPE_ARRAY:
-        return $this->objectToArray($object);
-      break;
-
-      default:
-        throw new InvalidArgumentException(sprintf(
-          "Unknwon return type %s", $this->responseConfig['returnType']
-        ));
-      break;
-    }
-  }
-
-  /**
-   * Transforms the responseobject to an array
-   *
-   * @param object $object
-   *
-   * @return array An arrayrepresentation of the given object
-   */
-  protected function objectToArray($object)
-  {
-    $out = array();
-    foreach ($object as $key => $value)
-    {
-      switch (true)
-      {
-        case is_object($value):
-          $out[$key] = $this->objectToArray($value);
-        break;
-
-        case is_array($value):
-          $out[$key] = $this->objectToArray($value);
-
-        break;
-
-        default:
-          $out[$key] = $value;
-        break;
-      }
-    }
-
-    return $out;
   }
 }
