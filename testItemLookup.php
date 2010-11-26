@@ -19,7 +19,7 @@ try
 {
     $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE');
 
-    $response = $amazonEcs->lookup('B0017TZY5Y');
+    $response = $amazonEcs->responseGroup('Large')->lookup('B0017TZY5Y');
     //var_dump($response);
 
     $response = $amazonEcs->responseGroup('Images')->lookup('B0017TZY5Y');

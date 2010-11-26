@@ -12,7 +12,7 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 0.9
+ * @version 1.0
  * @author  Exeu <exeu65@googlemail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
@@ -21,6 +21,7 @@ class AmazonECS
 {
   /**
    * Basic Responsetypes
+   *
    * @var integer
    */
   const RETURN_TYPE_ARRAY  = 1;
@@ -48,17 +49,20 @@ class AmazonECS
   /**
    * @param string $accessKey
    * @param string $secretKey
+   * @param string $country
+   * @param string $associateTag
    */
-  public function __construct($accessKey, $secretKey, $country = 'US')
+  public function __construct($accessKey, $secretKey, $country = 'US', $associateTag = '')
   {
     if (empty($accessKey) || empty($secretKey))
     {
       throw new Exception('No Access Key or Secret Key has been set');
     }
 
-    $this->requestConfig['accessKey']   = $accessKey;
-    $this->requestConfig['secretKey']   = $secretKey;
-    $this->responseConfig['country']    = $country;
+    $this->requestConfig['accessKey']     = $accessKey;
+    $this->requestConfig['secretKey']     = $secretKey;
+    $this->requestConfig['associateTag']  = $associateTag;
+    $this->responseConfig['country']      = $country;
   }
 
   /**
@@ -109,15 +113,23 @@ class AmazonECS
    */
   protected function buildRequestParams($function, array $params)
   {
-    return array(
-      'AWSAccessKeyId' => $this->requestConfig['accessKey'],
-      'Request' => array_merge(
-        array('Operation' => $function),
-        $params,
-        $this->responseConfig['optionalParameters'],
-        array('ResponseGroup' => $this->prepareResponseGroup())
-      )
-    );
+    $associateTag = array();
+
+    if(false === empty($this->requestConfig['associateTag']))
+    {
+      $associateTag = array('AssociateTag' => $this->requestConfig['associateTag']);
+    }
+
+    return array_merge(
+      $associateTag,
+      array(
+        'AWSAccessKeyId' => $this->requestConfig['accessKey'],
+        'Request' => array_merge(
+          array('Operation' => $function),
+          $params,
+          $this->responseConfig['optionalParameters'],
+          array('ResponseGroup' => $this->prepareResponseGroup())
+    )));
   }
 
   /**
@@ -339,6 +351,26 @@ class AmazonECS
     }
 
     $this->responseConfig['returnType'] = $type;
+
+    return $this;
+  }
+
+  /**
+   * Setter/Getter of the AssociateTag.
+   * This could be used for late bindings of this attribute
+   *
+   * @param string $associateTag
+   *
+   * @return string|AmazonECS depends on associateTag argument
+   */
+  public function associateTag($associateTag = null)
+  {
+    if (null === $associateTag)
+    {
+      return $this->requestConfig['associateTag'];
+    }
+
+    $this->requestConfig['associateTag'] = $associateTag;
 
     return $this;
   }
