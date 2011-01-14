@@ -30,7 +30,7 @@ try
 
     // searching again
     $response = $amazonEcs->search('Bud Spencer');
-    //var_dump($response);
+    var_dump($response);
 
     // and again... Changing the responsegroup and category before
     $response = $amazonEcs->responseGroup('Small')->category('Books')->search('PHP 5');

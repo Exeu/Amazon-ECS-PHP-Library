@@ -12,7 +12,7 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 1.0
+ * @version 1.1
  * @author  Exeu <exeu65@googlemail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
@@ -263,7 +263,6 @@ class AmazonECS
 
         case is_array($value):
           $out[$key] = $this->objectToArray($value);
-
         break;
 
         default:
