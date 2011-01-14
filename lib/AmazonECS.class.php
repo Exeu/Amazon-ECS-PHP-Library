@@ -263,7 +263,6 @@ class AmazonECS
 
         case is_array($value):
           $out[$key] = $this->objectToArray($value);
-
         break;
 
         default:
