@@ -19,14 +19,11 @@
  */
 class AmazonECS
 {
-  /**
-   * Basic Responsetypes
-   *
-   * @var integer
-   */
   const RETURN_TYPE_ARRAY  = 1;
   const RETURN_TYPE_OBJECT = 2;
 
+  const BROWSENODES_ENABLED  = 1;
+  const BROWSENODES_DISABLED = 2;
   /**
    * Baseconfigurationstorage
    *
@@ -41,9 +38,10 @@ class AmazonECS
    * @var array
    */
   private $responseConfig = array(
-    'returnType'    => self::RETURN_TYPE_OBJECT,
-    'responseGroup' => 'Small',
-    'optionalParameters' => array()
+    'returnType'          => self::RETURN_TYPE_OBJECT,
+    'responseGroup'       => 'Small',
+    'optionalParameters'  => array(),
+    'browseNodes'         => self::BROWSENODES_DISABLED
   );
 
   /**
@@ -104,6 +102,23 @@ class AmazonECS
   }
 
   /**
+   * Implementation of BrowseNodeLookup
+   * This allows to fetch information about nodes (children anchestors, etc.)
+   *
+   * @param integer $nodeId
+   */
+  public function browseNodeLookup($nodeId)
+  {
+    $params = $this->buildRequestParams('BrowseNodeLookup', array(
+      'BrowseNodeId' => $nodeId
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("BrowseNodeLookup", $params)
+    );
+  }
+
+  /**
    * Builds the request parameters
    *
    * @param string $function
@@ -120,6 +135,8 @@ class AmazonECS
       $associateTag = array('AssociateTag' => $this->requestConfig['associateTag']);
     }
 
+    $responseGroup =  array('ResponseGroup' => $this->prepareResponseGroup());
+
     return array_merge(
       $associateTag,
       array(
@@ -128,7 +145,7 @@ class AmazonECS
           array('Operation' => $function),
           $params,
           $this->responseConfig['optionalParameters'],
-          array('ResponseGroup' => $this->prepareResponseGroup())
+          $responseGroup
     )));
   }
 

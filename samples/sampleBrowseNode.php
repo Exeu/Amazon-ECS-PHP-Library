@@ -19,6 +19,10 @@ try
 {
     $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE');
 
+    $amazonEcs->responseGroup('BrowseNodeInfo');
+
+    $response = $amazonEcs->browseNodeLookup(541686);
+    var_dump($response);
 }
 catch(Exception $e)
 {
