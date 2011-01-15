@@ -5,7 +5,7 @@ about it from tha amazon productdatabase.
 This is realized by the Product Advertising API (former ECS) from Amazon WS Front.
 https://affiliate-program.amazon.com/gp/advertising/api/detail/main.html
 
-The AmazonECS class fetchs productinformation via SOPA Requests directly from the Amazon-Database.
+The AmazonECS class fetchs productinformation via SOAP Requests directly from the Amazon-Database.
 
 It supports two basic operations: ItemSearch and ItemLookup (**Version <= 1.0**)
 and three operations: ItemSearch, ItemLookup and BrowseNodeLookup (**Version >= 1.1**)
