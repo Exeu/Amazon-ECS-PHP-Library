@@ -26,7 +26,7 @@ try
     //var_dump($response);
 
     // from now on you want to have pure arrays as response
-    $amazonEcs->setReturnType(AmazonECS::RETURN_TYPE_ARRAY);
+    $amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
 
     // searching again
     $response = $amazonEcs->search('Bud Spencer');
