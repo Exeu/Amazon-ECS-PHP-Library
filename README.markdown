@@ -13,8 +13,8 @@ Requirement is the PHP extension SOAP.
 
 #Basic Usage:
 ```php5
-     $client    = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
-   ```
+$client    = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
+```
 
 $response  = $client->category('Books')->search('PHP 5');
 var_dump($response);
