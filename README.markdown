@@ -11,7 +11,7 @@ These operations could be expanded with extra prarmeters to specialize the query
 
 Requirement is the PHP extension SOAP.
 
-#Basic Usage:
+##Basic Usage:
 
     $client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
 
@@ -20,5 +20,9 @@ Requirement is the PHP extension SOAP.
 
 For more Examples go to the samples folder an have a look at the sample files.
 
-#Webservice Documentation
+##Webservice Documentation:
 http://docs.amazonwebservices.com/AWSECommerceService/2010-09-01/DG/
+
+##More information:
+See wikipages for  more information.
+https://github.com/Exeu/Amazon-ECS-PHP-Library/wiki
