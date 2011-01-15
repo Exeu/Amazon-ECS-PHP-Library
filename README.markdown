@@ -12,12 +12,14 @@ These operations could be expanded with extra prarmeters to specialize the query
 Requirement is the PHP extension SOAP.
 
 #Basic Usage:
-```php5
-$client    = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
+```php
+$client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
 ```
 
+```php
 $response  = $client->category('Books')->search('PHP 5');
 var_dump($response);
+```
 
 For more Examples go to the samples folder an have a look at the sample files.
 
