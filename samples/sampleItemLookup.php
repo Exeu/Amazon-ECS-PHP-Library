@@ -5,15 +5,15 @@ if ("cli" !== PHP_SAPI)
 }
 
 
-if (is_file('testSettings.php'))
+if (is_file('sampleSettings.php'))
 {
-  include 'testSettings.php';
+  include 'sampleSettings.php';
 }
 
 defined('AWS_API_KEY') or define('AWS_API_KEY', 'API KEY');
 defined('AWS_API_SECRET_KEY') or define('AWS_API_SECRET_KEY', 'SECRET KEY');
 
-require 'lib/AmazonECS.class.php';
+require '../lib/AmazonECS.class.php';
 
 try
 {

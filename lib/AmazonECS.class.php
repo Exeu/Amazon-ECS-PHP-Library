@@ -12,18 +12,13 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 1.0
+ * @version 1.1-DEV
  * @author  Exeu <exeu65@googlemail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
  */
 class AmazonECS
 {
-  /**
-   * Basic Responsetypes
-   *
-   * @var integer
-   */
   const RETURN_TYPE_ARRAY  = 1;
   const RETURN_TYPE_OBJECT = 2;
 
@@ -34,17 +29,23 @@ class AmazonECS
    */
   private $requestConfig = array();
 
-
   /**
    * Responseconfig
    *
    * @var array
    */
   private $responseConfig = array(
-    'returnType'    => self::RETURN_TYPE_OBJECT,
-    'responseGroup' => 'Small',
-    'optionalParameters' => array()
+    'returnType'          => self::RETURN_TYPE_OBJECT,
+    'responseGroup'       => 'Small',
+    'optionalParameters'  => array()
   );
+
+  /**
+   * The Webservice URI: Setted to version 2010-09-01
+   *
+   * @var string
+   */
+  protected $webserviceUri = 'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/%%COUNTRY%%/AWSECommerceService.wsdl';
 
   /**
    * @param string $accessKey
@@ -74,16 +75,25 @@ class AmazonECS
    *
    * @see returnType()
    */
-  public function search($pattern)
+  public function search($pattern, $nodeId = null)
   {
     if (false === isset($this->requestConfig['category']))
     {
       throw new Exception('No Category given: Please set it up before');
     }
 
-    $params = $this->buildRequestParams('ItemSearch', array(
-      'Keywords' => $pattern,
-      'SearchIndex' => $this->requestConfig['category']
+    $browseNode = array();
+    if (null !== $nodeId && true === $this->validateNodeId($nodeId))
+    {
+      $browseNode = array('BrowseNode' => $nodeId);
+    }
+
+    $params = $this->buildRequestParams('ItemSearch', array_merge(
+      array(
+        'Keywords' => $pattern,
+        'SearchIndex' => $this->requestConfig['category']
+      ),
+      $browseNode
     ));
 
     return $this->returnData(
@@ -100,6 +110,25 @@ class AmazonECS
 
     return $this->returnData(
       $this->performSoapRequest("ItemLookup", $params)
+    );
+  }
+
+  /**
+   * Implementation of BrowseNodeLookup
+   * This allows to fetch information about nodes (children anchestors, etc.)
+   *
+   * @param integer $nodeId
+   */
+  public function browseNodeLookup($nodeId)
+  {
+    $this->validateNodeId($nodeId);
+
+    $params = $this->buildRequestParams('BrowseNodeLookup', array(
+      'BrowseNodeId' => $nodeId
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("BrowseNodeLookup", $params)
     );
   }
 
@@ -154,7 +183,7 @@ class AmazonECS
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
-      'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/'.strtoupper($this->responseConfig['country']).'/AWSECommerceService.wsdl',
+      str_replace('%%COUNTRY%%', strtoupper($this->responseConfig['country']), $this->webserviceUri),
       array('exceptions' => 1)
     );
 
@@ -214,6 +243,23 @@ class AmazonECS
   final protected function buildSignature($request)
   {
     return base64_encode(hash_hmac("sha256", $request, $this->requestConfig['secretKey'], true));
+  }
+
+  /**
+   * Basic validation of the nodeId
+   *
+   * @param integer $nodeId
+   *
+   * @return boolean
+   */
+  final protected function validateNodeId($nodeId)
+  {
+    if (false === is_numeric($nodeId) && $nodeId <= 0)
+    {
+      throw new InvalidArgumentException(sprintf('Node has to be a positive Integer.'));
+    }
+
+    return true;
   }
 
   /**
@@ -375,7 +421,7 @@ class AmazonECS
   }
 
   /**
-   * @deprected use returnType() instead
+   * @deprecated use returnType() instead
    */
   public function setReturnType($type)
   {

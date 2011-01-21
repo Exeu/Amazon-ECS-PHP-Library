@@ -4,15 +4,15 @@ if ("cli" !== PHP_SAPI)
     echo "<pre>";
 }
 
-if (is_file('testSettings.php'))
+if (is_file('sampleSettings.php'))
 {
-  include 'testSettings.php';
+  include 'sampleSettings.php';
 }
 
 defined('AWS_API_KEY') or define('AWS_API_KEY', 'API KEY');
 defined('AWS_API_SECRET_KEY') or define('AWS_API_SECRET_KEY', 'SECRET KEY');
 
-require 'lib/AmazonECS.class.php';
+require '../lib/AmazonECS.class.php';
 
 try
 {
@@ -26,7 +26,7 @@ try
     //var_dump($response);
 
     // from now on you want to have pure arrays as response
-    $amazonEcs->setReturnType(AmazonECS::RETURN_TYPE_ARRAY);
+    $amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
 
     // searching again
     $response = $amazonEcs->search('Bud Spencer');

@@ -8,9 +8,9 @@ if ("cli" !== PHP_SAPI)
     echo "<pre>";
 }
 
-if (is_file('testSettings.php'))
+if (is_file('sampleSettings.php'))
 {
-  include 'testSettings.php';
+  include 'sampleSettings.php';
 }
 
 defined('AWS_API_KEY') or define('AWS_API_KEY', 'API KEY');
@@ -18,7 +18,7 @@ defined('AWS_API_SECRET_KEY') or define('AWS_API_SECRET_KEY', 'SECRET KEY');
 defined('AWS_ASSOCIATE_TAG') or define('AWS_ASSOCIATE_TAG', 'ASSOCIATE TAG');
 defined('AWS_ANOTHER_ASSOCIATE_TAG') or define('AWS_ANOTHER_ASSOCIATE_TAG', 'ANOTHER ASSOCIATE TAG');
 
-require 'lib/AmazonECS.class.php';
+require '../lib/AmazonECS.class.php';
 
 try
 {

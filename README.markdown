@@ -1,6 +1,4 @@
-README
-======
-
+#Amazon ECS PHP Library V1.1
 AmazonECS is a class which searchs products and fetchs information
 about it from tha amazon productdatabase.
 
@@ -13,14 +11,18 @@ These operations could be expanded with extra prarmeters to specialize the query
 
 Requirement is the PHP extension SOAP.
 
-======
+##Basic Usage:
 
-Basic Usage:
+    $client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
 
-// The langparameter is optional: Default is DE
-$client    = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
+    $response  = $client->category('Books')->search('PHP 5');
+    var_dump($response);
 
-$response  = $client->category('Books')->search('PHP 5');
-var_dump($response);
+For more Examples go to the samples folder an have a look at the sample files.
 
-For more Examplse see testItemSearch.php and testItemLookup.php
+##Webservice Documentation:
+http://docs.amazonwebservices.com/AWSECommerceService/2010-09-01/DG/
+
+##More information:
+See wikipages for  more information.
+https://github.com/Exeu/Amazon-ECS-PHP-Library/wiki
