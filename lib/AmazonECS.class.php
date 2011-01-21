@@ -5,7 +5,7 @@
  * =====================
  *
  * This class fetchs productinformation via the Product Advertising API by Amazon (formerly ECS).
- * It supports two basic operations: ItemSearch and ItemLookup.
+ * It supports three basic operations: ItemSearch, ItemLookup and BrowseNodeLookup.
  * These operations could be expanded with extra prarmeters to specialize the query.
  *
  * Requirement is the PHP extension SOAP.
@@ -30,7 +30,7 @@ class AmazonECS
   private $requestConfig = array();
 
   /**
-   * Responseconfig
+   * Responseconfigurationstorage
    *
    * @var array
    */
@@ -247,7 +247,7 @@ class AmazonECS
 
   /**
    * Basic validation of the nodeId
-   *
+   * 
    * @param integer $nodeId
    *
    * @return boolean
@@ -263,7 +263,7 @@ class AmazonECS
   }
 
   /**
-   * Returns the Response either as Array or Array/Object
+   * Returns the response either as Array or Array/Object
    *
    * @param object $object
    *
@@ -336,6 +336,13 @@ class AmazonECS
     {
       return $this->responseConfig['optionalParameters'];
     }
+    
+    if (false === is_array($params))
+    {
+      throw new InvalidArgumentException(sprintf(
+        "%s is no valid parameter: Use an array with Key => Value Pairs", $params
+      ));
+    }
 
     $this->responseConfig['optionalParameters'] = $params;
 
@@ -346,7 +353,7 @@ class AmazonECS
    * Set or get the country
    *
    * if the country argument is null it will return the current
-   * country, otherwise it will set the country and reutrn itself.
+   * country, otherwise it will set the country and return itself.
    *
    * @param string|null $country
    *
