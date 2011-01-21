@@ -12,7 +12,7 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 1.1-DEV
+ * @version 1.1
  * @author  Exeu <exeu65@googlemail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
@@ -247,7 +247,7 @@ class AmazonECS
 
   /**
    * Basic validation of the nodeId
-   * 
+   *
    * @param integer $nodeId
    *
    * @return boolean
@@ -336,7 +336,7 @@ class AmazonECS
     {
       return $this->responseConfig['optionalParameters'];
     }
-    
+
     if (false === is_array($params))
     {
       throw new InvalidArgumentException(sprintf(
