@@ -112,6 +112,26 @@ class AmazonECS
       $this->performSoapRequest("ItemLookup", $params)
     );
   }
+  
+  /**
+   * Lookup a product by UPC.
+   * 
+   * @param string $upc - 12 Digit UPC
+   * @param string $search_index - Amazon SearchIndex, e.g. "Electronics"
+   * @return object
+   */
+  public function lookupUPC($upc, $search_index)
+  {
+    $params = $this->buildRequestParams('ItemLookup', array(
+      'ItemId' => $upc,
+      'IdType' => 'UPC',
+      'SearchIndex' => $search_index
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("ItemLookup", $params)
+    );
+  }
 
   /**
    * Implementation of BrowseNodeLookup
