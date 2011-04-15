@@ -13,7 +13,8 @@
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
  * @version 1.1
- * @author  Exeu <exeu65@googlemail.com>
+ * @author       Exeu <exeu65@googlemail.com>
+ * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library Source
  */
@@ -45,7 +46,7 @@ class AmazonECS
    *
    * @var string
    */
-  protected $webserviceUri = 'http://ecs.amazonaws.com/AWSECommerceService/2010-09-01/%%COUNTRY%%/AWSECommerceService.wsdl';
+  protected $webserviceUri = 'http://ecs.amazonaws.com/AWSECommerceService/2010-11-01/%%COUNTRY%%/AWSECommerceService.wsdl';
 
   /**
    * @param string $accessKey
@@ -129,6 +130,23 @@ class AmazonECS
 
     return $this->returnData(
       $this->performSoapRequest("BrowseNodeLookup", $params)
+    );
+  }
+
+  /**
+   * Implementation of SimilarityLookup
+   * This allows to fetch information about product related to the parameter product
+   *
+   * @param string $asin
+   */
+  public function similarityLookup($asin)
+  {
+    $params = $this->buildRequestParams('SimilarityLookup', array(
+      'ItemId' => $asin
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("SimilarityLookup", $params)
     );
   }
 
@@ -433,5 +451,19 @@ class AmazonECS
   public function setReturnType($type)
   {
     return $this->returnType($type);
+  }
+  
+  
+  
+  public function page($page)
+  {
+    if ($page == 1)
+    {
+      return $this;
+    }
+    
+    $this->responseConfig['optionalParameters'] = array("ItemPage" => $page);
+
+    return $this;
   }
 }

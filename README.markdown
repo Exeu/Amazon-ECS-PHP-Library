@@ -27,7 +27,7 @@ These files contain all information you need for building querys successful.
 
 ##Webservice Documentation:
 Hosted on Amazon.com:
-http://docs.amazonwebservices.com/AWSECommerceService/2010-09-01/DG/
+http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/
 
 ##More information:
 See wikipages for  more information:
