@@ -462,7 +462,8 @@ class AmazonECS
       return $this;
     }
     
-    $this->responseConfig['optionalParameters'] = array("ItemPage" => $page);
+    $this->responseConfig['optionalParameters'] = array_merge($this->responseConfig['optionalParameters'];
+                                                              array("ItemPage" => $page));
 
     return $this;
   }
