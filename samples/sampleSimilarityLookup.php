@@ -4,7 +4,6 @@ if ("cli" !== PHP_SAPI)
     echo "<pre>";
 }
 
-
 if (is_file('sampleSettings.php'))
 {
   include 'sampleSettings.php';

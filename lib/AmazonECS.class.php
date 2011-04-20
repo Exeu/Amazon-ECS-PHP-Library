@@ -453,6 +453,14 @@ class AmazonECS
     return $this->returnType($type);
   }
 
+  /**
+   * Setting the resultpage to a specified value.
+   * Allows to browse resultsets which have more than one page.
+   *
+   * @param integer $page
+   *
+   * @return AmazonECS
+   */
   public function page($page)
   {
     if (false === is_numeric($page) || $page <= 0)
