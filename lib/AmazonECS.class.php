@@ -12,7 +12,7 @@
  *
  * @package AmazonECS
  * @license http://www.gnu.org/licenses/gpl.txt GPL
- * @version 1.1
+ * @version 1.2-DEV
  * @author       Exeu <exeu65@googlemail.com>
  * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
@@ -42,7 +42,7 @@ class AmazonECS
   );
 
   /**
-   * The Webservice URI: Setted to version 2010-09-01
+   * The Webservice URI: Setted to version 2010-11-01
    *
    * @var string
    */
@@ -452,18 +452,21 @@ class AmazonECS
   {
     return $this->returnType($type);
   }
-  
-  
-  
+
   public function page($page)
   {
-    if ($page == 1)
+    if (false === is_numeric($page) || $page <= 0)
     {
-      return $this;
+      throw new InvalidArgumentException(sprintf(
+        '%s is an invalid page value. It has to be numeric and positive',
+        $page
+      ));
     }
-    
-    $this->responseConfig['optionalParameters'] = array_merge($this->responseConfig['optionalParameters'],
-                                                              array("ItemPage" => $page));
+
+    $this->responseConfig['optionalParameters'] = array_merge(
+      $this->responseConfig['optionalParameters'],
+      array("ItemPage" => $page)
+    );
 
     return $this;
   }

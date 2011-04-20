@@ -30,7 +30,7 @@ try
 
     // searching again
     $response = $amazonEcs->search('Bud Spencer');
-    var_dump($response);
+    //var_dump($response);
 
     // and again... Changing the responsegroup and category before
     $response = $amazonEcs->responseGroup('Small')->category('Books')->search('PHP 5');
@@ -61,6 +61,10 @@ try
 
    // Want to have more Repsonsegroups?                         And Maybe you want to start with resultpage 2?
    $response = $amazonEcs->responseGroup('Small,Images')->optionalParameters(array('ItemPage' => 2))->search('Bruce Willis');
+   //var_dump($response);
+
+   // With version 1.2 you can use the page function to set up the page of the resultset
+   $response = $amazonEcs->responseGroup('Small,Images')->page(3)->search('Bruce Willis');
    //var_dump($response);
 }
 catch(Exception $e)

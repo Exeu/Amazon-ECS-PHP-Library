@@ -33,15 +33,15 @@ try
      */
 
     $response = $amazonEcs->category('DVD')->responseGroup('Large')->search("Matrix Revolutions");
-    //var_dump($response);
+    var_dump($response);
 
     // searching again
     $response = $amazonEcs->search('Bud Spencer');
-    //var_dump($response);
+    var_dump($response);
 
     // Use the new Setter to update your AssociateTag on the fly
     $response = $amazonEcs->associateTag(AWS_ANOTHER_ASSOCIATE_TAG)->search('Bud Spencer');
-    //var_dump($response);
+    var_dump($response);
 
 
     // For more examples please look at testItemSearch.php and testItemLookup.php
