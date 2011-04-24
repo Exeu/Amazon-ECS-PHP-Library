@@ -1,4 +1,4 @@
-#Amazon ECS PHP Library Version 1.1
+#Amazon ECS PHP Library Version 1.2
 AmazonECS is a class which searchs products and fetchs information
 about it from tha amazon productdatabase.
 
