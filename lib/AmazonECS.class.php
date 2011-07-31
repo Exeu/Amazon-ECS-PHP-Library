@@ -42,7 +42,7 @@ class AmazonECS
   );
 
   /**
-   * All possible Locations
+   * All possible locations
    *
    * @var array
    */
