@@ -12,7 +12,7 @@
  *
  * @package      AmazonECS
  * @license      http://www.gnu.org/licenses/gpl.txt GPL
- * @version      1.2
+ * @version      1.3-DEV
  * @author       Exeu <exeu65@googlemail.com>
  * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link         http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
@@ -42,11 +42,18 @@ class AmazonECS
   );
 
   /**
-   * The Webservice URI: Setted to version 2010-11-01
+   * The WSDL File
    *
    * @var string
    */
-  protected $webserviceUri = 'http://ecs.amazonaws.com/AWSECommerceService/2010-11-01/%%COUNTRY%%/AWSECommerceService.wsdl';
+  protected $webserviceUri = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl';
+
+  /**
+   * The SOAP Endpoint
+   *
+   * @var string
+   */
+  protected $webserviceEndpoint = 'https://webservices.amazon.%%COUNTRY%%/onca/soap?Service=AWSECommerceService';
 
   /**
    * @param string $accessKey
@@ -54,7 +61,7 @@ class AmazonECS
    * @param string $country
    * @param string $associateTag
    */
-  public function __construct($accessKey, $secretKey, $country = 'US', $associateTag = '')
+  public function __construct($accessKey, $secretKey, $country, $associateTag)
   {
     if (empty($accessKey) || empty($secretKey))
     {
@@ -101,7 +108,6 @@ class AmazonECS
       $this->performSoapRequest("ItemSearch", $params)
     );
   }
-
 
   public function lookup($asin)
   {
@@ -201,9 +207,11 @@ class AmazonECS
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
-      str_replace('%%COUNTRY%%', strtoupper($this->responseConfig['country']), $this->webserviceUri),
+      $this->webserviceUri,
       array('exceptions' => 1)
     );
+
+    $soapClient->__setLocation(str_replace('%%COUNTRY%%', strtolower($this->responseConfig['country']), $this->webserviceEndpoint));
 
     $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
 

@@ -11,6 +11,7 @@ if (is_file('sampleSettings.php'))
 
 defined('AWS_API_KEY') or define('AWS_API_KEY', 'API KEY');
 defined('AWS_API_SECRET_KEY') or define('AWS_API_SECRET_KEY', 'SECRET KEY');
+defined('AWS_ASSOCIATE_TAG') or define('AWS_ASSOCIATE_TAG', 'ASSOCIATE TAG');
 
 require '../lib/AmazonECS.class.php';
 
@@ -18,12 +19,17 @@ try
 {
     // get a new object with your API Key and secret key. Lang is optional.
     // if you leave lang blank it will be US.
-    $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE');
+    $amazonEcs = new AmazonECS(AWS_API_KEY, AWS_API_SECRET_KEY, 'DE', AWS_ASSOCIATE_TAG);
+
+    // for the new version of the wsdl its required to provide a associate Tag
+    // @see https://affiliate-program.amazon.com/gp/advertising/api/detail/api-changes.html?ie=UTF8&pf_rd_t=501&ref_=amb_link_83957571_2&pf_rd_m=ATVPDKIKX0DER&pf_rd_p=&pf_rd_s=assoc-center-1&pf_rd_r=&pf_rd_i=assoc-api-detail-2-v2
+    // you can set it with the setter function or as the fourth paramameter of ther constructor above
+    $amazonEcs->associateTag(AWS_ASSOCIATE_TAG);
 
 
     // changing the category to DVD and the response to only images and looking for some matrix stuff.
-    $response = $amazonEcs->category('DVD')->responseGroup('Images')->search("Matrix Revolutions");
-    //var_dump($response);
+    $response = $amazonEcs->category('DVD')->responseGroup('Large')->search("Matrix Revolutions");
+    var_dump($response);
 
     // from now on you want to have pure arrays as response
     $amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);
