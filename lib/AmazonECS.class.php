@@ -42,11 +42,25 @@ class AmazonECS
   );
 
   /**
+   * All possible Locations
+   *
+   * @var array
+   */
+  private $possibleLocations = array(
+    'de',
+    'com',
+    'co.uk',
+    'ca',
+    'fr',
+    'jp'
+  );
+
+  /**
    * The WSDL File
    *
    * @var string
    */
-  protected $webserviceUri = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl';
+  protected $webserviceWsdl = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl';
 
   /**
    * The SOAP Endpoint
@@ -71,7 +85,7 @@ class AmazonECS
     $this->requestConfig['accessKey']     = $accessKey;
     $this->requestConfig['secretKey']     = $secretKey;
     $this->requestConfig['associateTag']  = $associateTag;
-    $this->responseConfig['country']      = $country;
+    $this->country($country);
   }
 
   /**
@@ -207,11 +221,15 @@ class AmazonECS
   protected function performSoapRequest($function, $params)
   {
     $soapClient = new SoapClient(
-      $this->webserviceUri,
+      $this->webserviceWsdl,
       array('exceptions' => 1)
     );
 
-    $soapClient->__setLocation(str_replace('%%COUNTRY%%', strtolower($this->responseConfig['country']), $this->webserviceEndpoint));
+    $soapClient->__setLocation(str_replace(
+      '%%COUNTRY%%',
+      $this->responseConfig['country'],
+      $this->webserviceEndpoint
+    ));
 
     $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
 
@@ -392,7 +410,12 @@ class AmazonECS
       return $this->responseConfig['country'];
     }
 
-    $this->responseConfig['country'] = $country;
+    if (false === in_array(strtolower($country), $this->possibleLocations))
+    {
+      throw new InvalidArgumentException(sprintf("Invalid Country-Code: %s! Possible Country-Codes: %s", $country, implode(', ', $this->possibleLocations)));
+    }
+
+    $this->responseConfig['country'] = strtolower($country);
 
     return $this;
   }
