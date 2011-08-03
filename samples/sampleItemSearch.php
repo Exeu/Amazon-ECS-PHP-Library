@@ -47,7 +47,7 @@ try
     //var_dump($response);
 
     // want to look in the US Database? No Problem
-    $response = $amazonEcs->country('us')->search('MySql');
+    $response = $amazonEcs->country('com')->search('MySql');
     //var_dump($response);
 
     // or Japan?

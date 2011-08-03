@@ -46,14 +46,7 @@ class AmazonECS
    *
    * @var array
    */
-  private $possibleLocations = array(
-    'de',
-    'com',
-    'co.uk',
-    'ca',
-    'fr',
-    'jp'
-  );
+  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'jp', 'it', 'cn');
 
   /**
    * The WSDL File
@@ -412,7 +405,11 @@ class AmazonECS
 
     if (false === in_array(strtolower($country), $this->possibleLocations))
     {
-      throw new InvalidArgumentException(sprintf("Invalid Country-Code: %s! Possible Country-Codes: %s", $country, implode(', ', $this->possibleLocations)));
+      throw new InvalidArgumentException(sprintf(
+        "Invalid Country-Code: %s! Possible Country-Codes: %s",
+        $country,
+        implode(', ', $this->possibleLocations)
+      ));
     }
 
     $this->responseConfig['country'] = strtolower($country);

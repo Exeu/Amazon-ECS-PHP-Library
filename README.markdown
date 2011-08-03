@@ -1,4 +1,4 @@
-#Amazon ECS PHP Library Version 1.2
+#Amazon ECS PHP Library Version 1.3-DEV
 AmazonECS is a class which searchs products and fetchs information
 about it from tha amazon productdatabase.
 
@@ -17,7 +17,7 @@ Requirement is the PHP extension SOAP.
 ##Basic Usage:
 
     require_once 'lib/AmazonECS.class.php';
-    $client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE');
+    $client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE', 'YOUR ASSOCIATE TAG');
 
     $response  = $client->category('Books')->search('PHP 5');
     var_dump($response);
