@@ -12,7 +12,7 @@
  *
  * @package      AmazonECS
  * @license      http://www.gnu.org/licenses/gpl.txt GPL
- * @version      1.3-DEV
+ * @version      1.3
  * @author       Exeu <exeu65@googlemail.com>
  * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link         http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
