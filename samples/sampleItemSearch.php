@@ -29,7 +29,7 @@ try
 
     // changing the category to DVD and the response to only images and looking for some matrix stuff.
     $response = $amazonEcs->category('DVD')->responseGroup('Large')->search("Matrix Revolutions");
-    var_dump($response);
+    //var_dump($response);
 
     // from now on you want to have pure arrays as response
     $amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);

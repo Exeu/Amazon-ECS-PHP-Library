@@ -1,4 +1,4 @@
-#Amazon ECS PHP Library Version 1.3-DEV
+#Amazon ECS PHP Library Version 1.3
 AmazonECS is a class which searchs products and fetchs information
 about it from tha amazon productdatabase.
 
@@ -7,8 +7,7 @@ https://affiliate-program.amazon.com/gp/advertising/api/detail/main.html
 
 The AmazonECS class fetchs productinformation via SOAP Requests directly from the Amazon-Database.
 
-It supports two basic operations: ItemSearch and ItemLookup (**Version <= 1.0**)
-and three operations: ItemSearch, ItemLookup and BrowseNodeLookup (**Version >= 1.1**)
+It supports four basic operations: ItemSearch, ItemLookup, BrowseNodeLookup, SimilarityLookup
 
 These operations could be expanded with extra prarmeters to specialize the query.
 
