@@ -51,7 +51,7 @@ try
     //var_dump($response);
 
     // or Japan?
-    $response = $amazonEcs->country('jp')->search('MySql');
+    $response = $amazonEcs->country('co.jp')->search('MySql');
     //var_dump($response);
 
    // Back to DE and looking for some Music !! Warning "Large" produces a lot of Response
