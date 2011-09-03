@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="AmazonECS" default="build" basedir=".">
+ <property name="build.dir" location="${basedir}/build" />
+
+ <target name="clean">
+  <!-- Clean up -->
+  <delete dir="build"/>
+
+  <!-- Create build directories -->
+  <mkdir dir="${build.dir}/api"/>
+  <mkdir dir="${build.dir}/code-browser"/>
+  <mkdir dir="${build.dir}/coverage"/>
+  <mkdir dir="${build.dir}/logs"/>
+  <mkdir dir="${build.dir}/pdepend"/>
+ </target>
+
+ <!-- Run unit tests and generate junit.xml and clover.xml -->
+ <target name="phpunit">
+  <exec executable="phpunit" failonerror="true"/>
+ </target>
+
+ <!-- Run pdepend, phpmd, phpcpd, and phpcs in parallel -->
+ <target name="parallelTasks">
+  <parallel>
+   <!-- <antcall target="pdepend"/> -->
+   <antcall target="phpmd"/>
+   <!-- <antcall target="phpcpd"/> -->
+   <antcall target="phpcs"/>
+   <!-- <antcall target="phpdoc"/>  -->
+  </parallel>
+ </target>
+
+ <!-- Generate pmd.xml -->
+ <target name="phpmd">
+  <exec executable="phpmd">
+   <arg line="${basedir} xml codesize,unusedcode,naming,design
+              --reportfile ${build.dir}/logs/pmd.xml
+              --exclude vendor,cache,log,web,data,migration,base,test" />
+  </exec>
+ </target>
+
+ <!-- Generate checkstyle.xml -->
+ <target name="phpcs">
+  <exec executable="phpcs" output="/dev/null">
+   <arg line="--report=checkstyle
+              --report-file=${build.dir}/logs/checkstyle.xml
+              --standard=PEAR
+              ${basedir}" />
+  </exec>
+ </target>
+ <target name="build" depends="clean,parallelTasks"/>
+</project>
