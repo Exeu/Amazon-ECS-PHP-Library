@@ -49,5 +49,13 @@
               ${basedir}" />
   </exec>
  </target>
- <target name="build" depends="clean,parallelTasks"/>
+
+  <target name="phpcb">
+  <exec executable="phpcb">
+   <arg line="--log=${build.dir}/logs
+              --source=${basedir}
+              --output=${build.dir}/code-browser" />
+  </exec>
+ </target>
+ <target name="build" depends="clean,parallelTasks,phpcb"/>
 </project>
