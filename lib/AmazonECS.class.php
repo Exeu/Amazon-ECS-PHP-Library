@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Amazon ECS Class
  * http://www.amazon.com
