@@ -27,6 +27,7 @@
       <antcall target="phpmd" />
       <antcall target="phpcpd" />
       <antcall target="phpcs" />
+      <antcall target="phploc" />
       <!-- <antcall target="phpdoc"/> -->
     </parallel>
   </target>
@@ -67,6 +68,14 @@
       <arg line="--log-pmd ${build.dir}/logs/pmd-cpd.xml
               --exclude ${basedir}/samples
               ${basedir}" />
+    </exec>
+  </target>
+
+  <!-- Generate phploc.xml -->
+  <target name="phploc">
+    <exec executable="phploc">
+      <arg line="--log-xml ${build.dir}/logs/phploc.xml
+              ${basedir}/lib" />
     </exec>
   </target>
 
