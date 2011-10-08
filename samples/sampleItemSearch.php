@@ -1,4 +1,8 @@
 <?php
+/**
+ * For a running Search Demo see: http://amazonecs.pixel-web.org
+ */
+
 if ("cli" !== PHP_SAPI)
 {
     echo "<pre>";
@@ -26,10 +30,8 @@ try
     // you can set it with the setter function or as the fourth paramameter of ther constructor above
     $amazonEcs->associateTag(AWS_ASSOCIATE_TAG);
 
-
     // changing the category to DVD and the response to only images and looking for some matrix stuff.
     $response = $amazonEcs->category('DVD')->responseGroup('Large')->search("Matrix Revolutions");
-    //var_dump($response);
 
     // from now on you want to have pure arrays as response
     $amazonEcs->returnType(AmazonECS::RETURN_TYPE_ARRAY);

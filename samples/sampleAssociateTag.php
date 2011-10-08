@@ -3,6 +3,10 @@
  * WARNING: This only works with version >= 1.0 of the AmazonECS library
  */
 
+/**
+ * For a running Search Demo see: http://amazonecs.pixel-web.org
+ */
+
 if ("cli" !== PHP_SAPI)
 {
     echo "<pre>";

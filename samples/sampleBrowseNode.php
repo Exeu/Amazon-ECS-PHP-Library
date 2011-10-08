@@ -1,4 +1,8 @@
 <?php
+/**
+ * For a running Search Demo see: http://amazonecs.pixel-web.org
+ */
+
 if ("cli" !== PHP_SAPI)
 {
     echo "<pre>";
