@@ -26,6 +26,9 @@ Requirement is the PHP extension SOAP.
 For some very simple examples go to the samples-folder and have a look at the sample files.
 These files contain all information you need for building querys successful.
 
+##Demo Site:
+Simple Produkt Search: http://amazonecs.pixel-web.org
+
 ##Webservice Documentation:
 Hosted on Amazon.com:
 http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/
