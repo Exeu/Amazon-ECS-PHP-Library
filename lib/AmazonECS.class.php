@@ -12,7 +12,7 @@
  *
  * @package      AmazonECS
  * @license      http://www.gnu.org/licenses/gpl.txt GPL
- * @version      1.3.1
+ * @version      1.3.2
  * @author       Exeu <exeu65@googlemail.com>
  * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link         http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
@@ -46,7 +46,7 @@ class AmazonECS
    *
    * @var array
    */
-  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn');
+  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
 
   /**
    * The WSDL File
