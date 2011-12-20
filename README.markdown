@@ -16,12 +16,21 @@ These operations could be expanded with extra prarmeters to specialize the query
 Requirement is the PHP extension SOAP.
 
 ##Basic Usage:
+The usage is quite simple.
+Just require the class, create a new object of it and it's ready to use.
+Nothing else to configure.
 
-    require_once 'lib/AmazonECS.class.php';
-    $client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE', 'YOUR ASSOCIATE TAG');
+You just need to pass a categoryname whem doing searches.
 
-    $response  = $client->category('Books')->search('PHP 5');
-    var_dump($response);
+``` php
+<?php
+
+require_once 'lib/AmazonECS.class.php';
+$client = new AmazonECS('YOUT API KEY', 'YOUR SECRET KEY', 'DE', 'YOUR ASSOCIATE TAG');
+
+$response  = $client->category('Books')->search('PHP 5');
+var_dump($response);
+```
 
 For some very simple examples go to the samples-folder and have a look at the sample files.
 These files contain all information you need for building querys successful.
