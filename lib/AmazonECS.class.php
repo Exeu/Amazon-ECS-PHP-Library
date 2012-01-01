@@ -483,7 +483,7 @@ class AmazonECS
 
   /**
    * Setting the resultpage to a specified value.
-   * Allows to browse resultsets which have more than one page.
+   * Allows to browse resultsets which have more than one page, but cannot exceed 10 pages.
    *
    * @param integer $page
    *
@@ -491,10 +491,10 @@ class AmazonECS
    */
   public function page($page)
   {
-    if (false === is_numeric($page) || $page <= 0)
+    if (false === is_numeric($page) || $page <= 0 || $page > 10)
     {
       throw new InvalidArgumentException(sprintf(
-        '%s is an invalid page value. It has to be numeric and positive',
+        '%s is an invalid page value. It has to be numeric and positive and less than 10',
         $page
       ));
     }
@@ -504,6 +504,30 @@ class AmazonECS
       array("ItemPage" => $page)
     );
 
+    return $this;
+  }
+
+  /**
+   *Specifying how the response message should be sorted
+   *@param string $sort
+   *
+   *@return AmazonECS
+   */
+  public function sortParam($sort)
+  {
+    if (false == is_string($sort))
+    {
+        throw new InvalidArgumentException(sprintf(
+          '%s is not a valid sorting parameter, it has to be a valid string',
+          $sort
+          ));
+    }
+    
+    $this->responseConfig['optionalParameters'] = array_merge(
+        $this->responseConfig['optionalParameters'],
+        array("Sort" => $sort)
+        );
+        
     return $this;
   }
 }
