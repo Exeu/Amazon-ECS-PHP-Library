@@ -12,7 +12,7 @@
  *
  * @package      AmazonECS
  * @license      http://www.gnu.org/licenses/gpl.txt GPL
- * @version      1.3.2
+ * @version      1.3.3-DEV
  * @author       Exeu <exeu65@googlemail.com>
  * @contributor  Julien Chaumond <chaumond@gmail.com>
  * @link         http://github.com/Exeu/Amazon-ECS-PHP-Library/wiki Wiki
@@ -77,7 +77,7 @@ class AmazonECS
 
     $this->requestConfig['accessKey']     = $accessKey;
     $this->requestConfig['secretKey']     = $secretKey;
-    $this->requestConfig['associateTag']  = $associateTag;
+    $this->associateTag($associateTag);
     $this->country($country);
   }
 
@@ -116,6 +116,15 @@ class AmazonECS
     );
   }
 
+  /**
+   * execute ItemLookup request
+   *
+   * @param string $asin
+   *
+   * @return array|object return type depends on setting
+   *
+   * @see returnType()
+   */
   public function lookup($asin)
   {
     $params = $this->buildRequestParams('ItemLookup', array(
@@ -291,7 +300,7 @@ class AmazonECS
    */
   final protected function validateNodeId($nodeId)
   {
-    if (false === is_numeric($nodeId) && $nodeId <= 0)
+    if (false === is_numeric($nodeId) || $nodeId <= 0)
     {
       throw new InvalidArgumentException(sprintf('Node has to be a positive Integer.'));
     }
@@ -417,6 +426,13 @@ class AmazonECS
     return $this;
   }
 
+  /**
+   * Setting/Getting the amazon category
+   *
+   * @param string $category
+   *
+   * @return string|AmazonECS depends on category argument
+   */
   public function category($category = null)
   {
     if (null === $category)
@@ -429,6 +445,13 @@ class AmazonECS
     return $this;
   }
 
+  /**
+   * Setting/Getting the responsegroup
+   *
+   * @param string $responseGroup Comma separated groups
+   *
+   * @return string|AmazonECS depends on responseGroup argument
+   */
   public function responseGroup($responseGroup = null)
   {
     if (null === $responseGroup)
@@ -441,6 +464,14 @@ class AmazonECS
     return $this;
   }
 
+  /**
+   * Setting/Getting the returntype
+   * It can be an object or an array
+   *
+   * @param integer $type Use the constants RETURN_TYPE_ARRAY or RETURN_TYPE_OBJECT
+   *
+   * @return integer|AmazonECS depends on type argument
+   */
   public function returnType($type = null)
   {
     if (null === $type)
