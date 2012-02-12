@@ -57,7 +57,7 @@ try
     //var_dump($response);
 
    // Back to DE and looking for some Music !! Warning "Large" produces a lot of Response
-   $response = $amazonEcs->country('es')->category('Music')->responseGroup('Large')->search('The Beatles');
+   $response = $amazonEcs->country('de')->category('Music')->responseGroup('Large')->search('The Beatles');
    //var_dump($response);
 
    // Or doing searchs in a loop?
