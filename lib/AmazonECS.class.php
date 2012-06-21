@@ -46,7 +46,17 @@ class AmazonECS
    *
    * @var array
    */
-  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
+  private $possibleLocations = array(
+    'de'    =>   1,
+    'com'   =>   2,
+    'co.uk' =>   4,
+    'ca'    =>   8,
+    'fr'    =>  16,
+    'co.jp' =>  32,
+    'it'    =>  64,
+    'cn'    => 128,
+    'es'    => 256,
+  );
 
   /**
    * The WSDL File
@@ -114,6 +124,110 @@ class AmazonECS
     return $this->returnData(
       $this->performSoapRequest("ItemSearch", $params)
     );
+  }
+
+  /**
+   * Get the SearchIndexes for the given country (otherwise return all)
+   *
+   * @see <a href="http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/APPNDX_SearchIndexValues.html">AWS Documentation - Product Advertising API - Search Index Support by Locale</a>
+   *
+   * @param string|null $country
+   *
+   * @return array
+   */
+  public function searchIndex($country = null)
+  {
+    //-- Shorthands for bit map
+    $LOC_US = $this->possibleLocations['com'];
+    $LOC_UK = $this->possibleLocations['co.uk'];
+    $LOC_DE = $this->possibleLocations['de'];
+    $LOC_JP = $this->possibleLocations['co.jp'];
+    $LOC_FR = $this->possibleLocations['fr'];
+    $LOC_CA = $this->possibleLocations['ca'];
+    $LOC_IT = $this->possibleLocations['it'];
+    $LOC_CN = $this->possibleLocations['cn'];
+    $LOC_ES = $this->possibleLocations['es'];
+
+    if(null === $country)
+    {
+      //-- no country specified, use set value
+      if(array_key_exists('country', $this->responseConfig))
+      {
+        $country = $this->responseConfig['country'];
+      }
+    }
+
+    $possibleSearchIndexes = array(
+      'All' =>                 $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'Apparel' =>             $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'Appliances' =>          $LOC_US |                     $LOC_JP |                               $LOC_CN          ,
+      'ArtsAndCrafts' =>       $LOC_US                                                                                ,
+      'Automotive' =>          $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP |                               $LOC_CN          ,
+      'Baby' =>                $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'Beauty' =>              $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'Blended' =>             $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA                              ,
+      'Books' =>               $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'Classical' =>           $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA                              ,
+      'DigitalMusic' =>        $LOC_US                                                                                ,
+      'DVD' =>                 $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT |           $LOC_ES,
+      'Electronics' =>         $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'ForeignBooks' =>                            $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT |           $LOC_ES,
+      'Garden' =>                                                                          $LOC_IT                    ,
+      'GourmetFood' =>         $LOC_US                                                                                ,
+      'Grocery' =>             $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP |                               $LOC_CN          ,
+      'HealthPersonalCare' =>  $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'Hobbies' =>                                           $LOC_JP                                                  ,
+      'Home' =>                                                                                      $LOC_CN          ,
+      'HomeGarden' =>          $LOC_US | $LOC_UK | $LOC_DE                                                            ,
+      'HomeImprovement' =>               $LOC_UK | $LOC_DE | $LOC_JP |                               $LOC_CN          ,
+      'Industrial' =>          $LOC_US                                                                                ,
+      'Jewelry' =>             $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'KindleStore' =>         $LOC_US | $LOC_UK                                                                      ,
+      'Kitchen' =>             $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |           $LOC_IT |           $LOC_ES,
+      'LawnAndGarden' =>       $LOC_US                                                                                ,
+      'Lighting' =>                      $LOC_UK | $LOC_DE |           $LOC_FR                                        ,
+      'Magazines' =>           $LOC_US |           $LOC_DE                                                            ,
+      'Marketplace' =>         $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP                                                  ,
+      'Miscellaneous' =>       $LOC_US |                                                             $LOC_CN          ,
+      'MobileApps' =>          $LOC_US                                                                                ,
+      'MP3Downloads' =>        $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR                                        ,
+      'Music' =>               $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'MusicalInstruments' =>  $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR                                        ,
+      'MusicTracks' =>         $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR                                        ,
+      'OfficeProducts' =>      $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'OutdoorLiving' =>       $LOC_US | $LOC_UK | $LOC_DE                                                            ,
+      'Outlet' =>                        $LOC_UK | $LOC_DE                                                            ,
+      'PCHardware' =>          $LOC_US | $LOC_UK | $LOC_DE |           $LOC_FR                                        ,
+      'PetSupplies' =>         $LOC_US                                                                                ,
+      'Photo' =>               $LOC_US |           $LOC_DE |                                         $LOC_CN          ,
+      'Shoes' =>               $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |           $LOC_IT | $LOC_CN          ,
+      'Software' =>            $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'SoftwareVideoGames' =>            $LOC_UK | $LOC_DE |           $LOC_FR | $LOC_CA                              ,
+      'SportingGoods' =>       $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |                     $LOC_CN          ,
+      'Tools' =>               $LOC_US | $LOC_UK | $LOC_DE                                                            ,
+      'Toys' =>                $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR |           $LOC_IT | $LOC_CN | $LOC_ES,
+      'UnboxVideo' =>          $LOC_US                                                                                ,
+      'VHS' =>                 $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA                              ,
+      'Video' =>               $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA |           $LOC_CN          ,
+      'VideoGames' =>          $LOC_US | $LOC_UK | $LOC_DE | $LOC_JP | $LOC_FR | $LOC_CA | $LOC_IT | $LOC_CN | $LOC_ES,
+      'Watches' =>             $LOC_US | $LOC_UK | $LOC_DE |           $LOC_FR |           $LOC_IT | $LOC_CN | $LOC_ES,
+      'Wireless' =>            $LOC_US                                                                                ,
+      'WirelessAccessories' => $LOC_US                                                                                ,
+    );
+
+    if(null === $country)
+    {
+      //-- if it is still null, return all of the keys
+      return array_keys($possibleSearchIndexes);
+    }
+
+    $this->validateCountry($country);
+
+    $country_mask = $this->possibleLocations[$country];
+
+    return array_keys(array_filter($possibleSearchIndexes, function($var) use ($country_mask) {
+      return ($country_mask === ($var & $country_mask));
+    }));
   }
 
   /**
@@ -412,18 +526,30 @@ class AmazonECS
       return $this->responseConfig['country'];
     }
 
-    if (false === in_array(strtolower($country), $this->possibleLocations))
-    {
-      throw new InvalidArgumentException(sprintf(
-        "Invalid Country-Code: %s! Possible Country-Codes: %s",
-        $country,
-        implode(', ', $this->possibleLocations)
-      ));
-    }
+    $this->validateCountry($country);
 
     $this->responseConfig['country'] = strtolower($country);
 
     return $this;
+  }
+
+  /**
+   * Verify that the given $country is a valid value
+   *
+   * @param string $country
+   *
+   * @thorws InvalidArgumentException
+   */
+  protected function validateCountry($country)
+  {
+    if (false === array_key_exists(strtolower($country), $this->possibleLocations))
+    {
+      throw new InvalidArgumentException(sprintf(
+        "Invalid Country-Code: %s! Possible Country-Codes: %s",
+        $country,
+        implode(', ', array_keys($this->possibleLocations))
+      ));
+    }
   }
 
   /**
