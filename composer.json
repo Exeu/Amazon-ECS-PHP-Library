@@ -1,0 +1,21 @@
+{
+    "name": "exeu/amazon-ecs-php",
+    "type": "library",
+    "description": "Amazon ECS PHP Library",
+    "keywords": ["Amazon", "ECS", "Product Advertising", "SOAP"],
+    "homepage": "https://github.com/Exeu/Amazon-ECS-PHP-Library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Jan Eichhorn",
+            "email": "exeu65@googlemail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "autoload": {
+        "files": ["lib/AmazonECS.class.php"]
+    }
+}
