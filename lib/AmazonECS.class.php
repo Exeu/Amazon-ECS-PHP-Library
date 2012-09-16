@@ -28,7 +28,9 @@ class AmazonECS
    *
    * @var array
    */
-  private $requestConfig = array();
+  private $requestConfig = array(
+    'requestDelay' => false
+  );
 
   /**
    * Responseconfigurationstorage
@@ -222,6 +224,10 @@ class AmazonECS
    */
   protected function performSoapRequest($function, $params)
   {
+    if (true ===  $this->requestConfig['requestDelay']) {
+      sleep(1);
+    }
+
     $soapClient = new SoapClient(
       $this->webserviceWsdl,
       array('exceptions' => 1)
@@ -536,5 +542,30 @@ class AmazonECS
     );
 
     return $this;
+  }
+
+  /**
+   * Enables or disables the request delay.
+   * If it is enabled (true) every request is delayed one second to get rid of the api request limit.
+   *
+   * Reasons for this you can read on this site:
+   * https://affiliate-program.amazon.com/gp/advertising/api/detail/faq.html
+   *
+   * By default the requestdelay is disabled
+   *
+   * @param boolean $enable true = enabled, false = disabled
+   *
+   * @return boolean|AmazonECS depends on enable argument
+   */
+  public function requestDelay($enable = null)
+  {
+    if (false === is_null($enable) && true === is_bool($enable))
+    {
+      $this->requestConfig['requestDelay'] = $enable;
+
+      return $this;
+    }
+
+    return $this->requestConfig['requestDelay'];
   }
 }
