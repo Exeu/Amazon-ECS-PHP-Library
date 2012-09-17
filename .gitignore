@@ -3,3 +3,5 @@
 *.project
 testSettings.php
 sampleSettings.php
+
+.DS_Store
