@@ -117,6 +117,47 @@ class AmazonECS
       $this->performSoapRequest("ItemSearch", $params)
     );
   }
+  
+  /**
+   * execute searchWithParameters
+   *
+   * @param array $patternArray
+   *
+   * @return array|object return type depends on setting
+   *
+   * @see returnType()
+   */
+  public function searchWithParameters($patternArray, $nodeId = null)
+  {
+    if (false === isset($this->requestConfig['category']))
+    {
+      throw new Exception('No Category given: Please set it up before');
+    }
+
+    $browseNode = array();
+    if (null !== $nodeId && true === $this->validateNodeId($nodeId))
+    {
+      $browseNode = array('BrowseNode' => $nodeId);
+    }
+    
+    $ItemSearchRequest = array();
+    
+    $ItemSearchRequest['SearchIndex'] = $this->requestConfig['category'];
+    
+    foreach($patternArray as $key => $value)
+    {
+    	$ItemSearchRequest[$key] = $value;
+    }
+
+    $params = $this->buildRequestParams('ItemSearch', array_merge(
+      $ItemSearchRequest,
+      $browseNode
+    ));
+
+    return $this->returnData(
+      $this->performSoapRequest("ItemSearch", $params)
+    );
+  }
 
   /**
    * execute ItemLookup request
