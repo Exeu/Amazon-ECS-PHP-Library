@@ -86,7 +86,7 @@ class AmazonECS
   /**
    * execute search
    *
-   * @param string $pattern
+   * @param string $pattern|$array (key/value)
    *
    * @return array|object return type depends on setting
    *
@@ -104,50 +104,21 @@ class AmazonECS
     {
       $browseNode = array('BrowseNode' => $nodeId);
     }
-
-    $params = $this->buildRequestParams('ItemSearch', array_merge(
-      array(
-        'Keywords' => $pattern,
-        'SearchIndex' => $this->requestConfig['category']
-      ),
-      $browseNode
-    ));
-
-    return $this->returnData(
-      $this->performSoapRequest("ItemSearch", $params)
-    );
-  }
-  
-  /**
-   * execute searchWithParameters
-   *
-   * @param array $patternArray
-   *
-   * @return array|object return type depends on setting
-   *
-   * @see returnType()
-   */
-  public function searchWithParameters($patternArray, $nodeId = null)
-  {
-    if (false === isset($this->requestConfig['category']))
-    {
-      throw new Exception('No Category given: Please set it up before');
-    }
-
-    $browseNode = array();
-    if (null !== $nodeId && true === $this->validateNodeId($nodeId))
-    {
-      $browseNode = array('BrowseNode' => $nodeId);
-    }
     
     $ItemSearchRequest = array();
     
     $ItemSearchRequest['SearchIndex'] = $this->requestConfig['category'];
     
-    foreach($patternArray as $key => $value)
+    if(is_array( $pattern ))
     {
-    	$ItemSearchRequest[$key] = $value;
-    }
+    	foreach($pattern as $key => $value)
+    	{
+    		$ItemSearchRequest[$key] = $value;
+    	}
+
+	} else {
+		$ItemSearchRequest['Keywords'] = $pattern;
+	}
 
     $params = $this->buildRequestParams('ItemSearch', array_merge(
       $ItemSearchRequest,
@@ -158,7 +129,7 @@ class AmazonECS
       $this->performSoapRequest("ItemSearch", $params)
     );
   }
-
+  
   /**
    * execute ItemLookup request
    *
