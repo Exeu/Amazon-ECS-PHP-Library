@@ -30,7 +30,7 @@ try
     $amazonEcs->associateTag(AWS_ASSOCIATE_TAG);
 
     // Looking up multiple items
-    $response = $amazonEcs->responseGroup('Large')->optionalParameters(array('Condition' => 'New'))->lookup('B0017TZY5Y', 'B004DULNPY');
+    $response = $amazonEcs->responseGroup('Large')->optionalParameters(array('Condition' => 'New'))->lookup('B0017TZY5Y, B004DULNPY');
     //var_dump($response);
 
     $response = $amazonEcs->responseGroup('Images')->lookup('B0017TZY5Y');
