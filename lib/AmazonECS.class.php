@@ -48,8 +48,8 @@ class AmazonECS
    *
    * @var array
    */
-  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
-
+  protected $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
+  
   /**
    * The WSDL File
    *
