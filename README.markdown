@@ -3,6 +3,8 @@ AmazonECS is a class which searches products and fetches information about it fr
 
 See a working Search-Demo at: http://amazonecs.pixel-web.org
 
+You can see the simple code of the demosite here: https://gist.github.com/4674423
+
 This is realized by the Product Advertising API (former ECS) from Amazon WS Front.
 https://affiliate-program.amazon.com/gp/advertising/api/detail/main.html
 
