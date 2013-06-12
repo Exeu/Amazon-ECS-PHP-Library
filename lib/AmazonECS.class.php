@@ -86,7 +86,7 @@ class AmazonECS
   /**
    * execute search
    *
-   * @param string $pattern
+   * @param string $pattern|$array (key/value)
    *
    * @return array|object return type depends on setting
    *
@@ -104,12 +104,24 @@ class AmazonECS
     {
       $browseNode = array('BrowseNode' => $nodeId);
     }
+    
+    $ItemSearchRequest = array();
+    
+    $ItemSearchRequest['SearchIndex'] = $this->requestConfig['category'];
+    
+    if(is_array( $pattern ))
+    {
+    	foreach($pattern as $key => $value)
+    	{
+    		$ItemSearchRequest[$key] = $value;
+    	}
+
+	} else {
+		$ItemSearchRequest['Keywords'] = $pattern;
+	}
 
     $params = $this->buildRequestParams('ItemSearch', array_merge(
-      array(
-        'Keywords' => $pattern,
-        'SearchIndex' => $this->requestConfig['category']
-      ),
+      $ItemSearchRequest,
       $browseNode
     ));
 
@@ -117,7 +129,7 @@ class AmazonECS
       $this->performSoapRequest("ItemSearch", $params)
     );
   }
-
+  
   /**
    * execute ItemLookup request
    *
