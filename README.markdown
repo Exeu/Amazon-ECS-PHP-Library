@@ -1,3 +1,8 @@
+#No longer maintained
+Please use the brand new lib: https://github.com/Exeu/apai-io
+
+
+
 #Amazon ECS PHP Library Version 1.3
 AmazonECS is a class which searches products and fetches information about it from the amazon product database.
 
