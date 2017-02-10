@@ -22,6 +22,15 @@ class AmazonECS
 {
   const RETURN_TYPE_ARRAY  = 1;
   const RETURN_TYPE_OBJECT = 2;
+  /**
+   * The WSDL File
+   */
+  const WS_WSDL = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl';
+
+  /**
+   * The SOAP Endpoint
+   */
+  const WS_ENDPOINT = 'https://webservices.amazon.%%COUNTRY%%/onca/soap?Service=AWSECommerceService';
 
   /**
    * Baseconfigurationstorage
@@ -48,21 +57,7 @@ class AmazonECS
    *
    * @var array
    */
-  private $possibleLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
-
-  /**
-   * The WSDL File
-   *
-   * @var string
-   */
-  protected $webserviceWsdl = 'http://webservices.amazon.com/AWSECommerceService/AWSECommerceService.wsdl';
-
-  /**
-   * The SOAP Endpoint
-   *
-   * @var string
-   */
-  protected $webserviceEndpoint = 'https://webservices.amazon.%%COUNTRY%%/onca/soap?Service=AWSECommerceService';
+  protected static $supportedLocations = array('de', 'com', 'co.uk', 'ca', 'fr', 'co.jp', 'it', 'cn', 'es');
 
   /**
    * @param string $accessKey
@@ -94,14 +89,12 @@ class AmazonECS
    */
   public function search($pattern, $nodeId = null)
   {
-    if (false === isset($this->requestConfig['category']))
-    {
+    if (false === isset($this->requestConfig['category'])) {
       throw new Exception('No Category given: Please set it up before');
     }
 
     $browseNode = array();
-    if (null !== $nodeId && true === $this->validateNodeId($nodeId))
-    {
+    if (null !== $nodeId && true === $this->validateNodeId($nodeId)) {
       $browseNode = array('BrowseNode' => $nodeId);
     }
 
@@ -141,13 +134,14 @@ class AmazonECS
   /**
    * Implementation of BrowseNodeLookup
    * This allows to fetch information about nodes (children anchestors, etc.)
-   *
+   * Be sure you set a compatible response group, e.g. BrowseNodeInfo
+   * 
    * @param integer $nodeId
    */
   public function browseNodeLookup($nodeId)
   {
     $this->validateNodeId($nodeId);
-
+    
     $params = $this->buildRequestParams('BrowseNodeLookup', array(
       'BrowseNodeId' => $nodeId
     ));
@@ -186,8 +180,7 @@ class AmazonECS
   {
     $associateTag = array();
 
-    if(false === empty($this->requestConfig['associateTag']))
-    {
+    if (false === empty($this->requestConfig['associateTag'])) {
       $associateTag = array('AssociateTag' => $this->requestConfig['associateTag']);
     }
 
@@ -210,8 +203,9 @@ class AmazonECS
    */
   protected function prepareResponseGroup()
   {
-    if (false === strstr($this->responseConfig['responseGroup'], ','))
+    if (false === strstr($this->responseConfig['responseGroup'], ',')) {
       return $this->responseConfig['responseGroup'];
+    }
 
     return explode(',', $this->responseConfig['responseGroup']);
   }
@@ -229,14 +223,14 @@ class AmazonECS
     }
 
     $soapClient = new SoapClient(
-      $this->webserviceWsdl,
+      self::WS_WSDL,
       array('exceptions' => 1)
     );
 
     $soapClient->__setLocation(str_replace(
       '%%COUNTRY%%',
       $this->responseConfig['country'],
-      $this->webserviceEndpoint
+      self::WS_ENDPOINT
     ));
 
     $soapClient->__setSoapHeaders($this->buildSoapHeader($function));
@@ -284,7 +278,7 @@ class AmazonECS
    */
   final protected function getTimestamp()
   {
-    return gmdate("Y-m-d\TH:i:s\Z");
+      return gmdate("Y-m-d\TH:i:s\Z");
   }
 
   /**
@@ -306,8 +300,7 @@ class AmazonECS
    */
   final protected function validateNodeId($nodeId)
   {
-    if (false === is_numeric($nodeId) || $nodeId <= 0)
-    {
+    if (false === is_numeric($nodeId) || $nodeId <= 0) {
       throw new InvalidArgumentException(sprintf('Node has to be a positive Integer.'));
     }
 
@@ -323,8 +316,7 @@ class AmazonECS
    */
   protected function returnData($object)
   {
-    switch ($this->responseConfig['returnType'])
-    {
+    switch ($this->responseConfig['returnType']) {
       case self::RETURN_TYPE_OBJECT:
         return $object;
       break;
@@ -351,10 +343,8 @@ class AmazonECS
   protected function objectToArray($object)
   {
     $out = array();
-    foreach ($object as $key => $value)
-    {
-      switch (true)
-      {
+    foreach ($object as $key => $value) {
+      switch (true) {
         case is_object($value):
           $out[$key] = $this->objectToArray($value);
         break;
@@ -384,13 +374,11 @@ class AmazonECS
    */
   public function optionalParameters($params = null)
   {
-    if (null === $params)
-    {
+    if (null === $params) {
       return $this->responseConfig['optionalParameters'];
     }
 
-    if (false === is_array($params))
-    {
+    if (false === is_array($params)) {
       throw new InvalidArgumentException(sprintf(
         "%s is no valid parameter: Use an array with Key => Value Pairs", $params
       ));
@@ -413,17 +401,15 @@ class AmazonECS
    */
   public function country($country = null)
   {
-    if (null === $country)
-    {
+    if (null === $country) {
       return $this->responseConfig['country'];
     }
 
-    if (false === in_array(strtolower($country), $this->possibleLocations))
-    {
+    if (false === in_array(strtolower($country), self::$supportedLocations)) {
       throw new InvalidArgumentException(sprintf(
         "Invalid Country-Code: %s! Possible Country-Codes: %s",
         $country,
-        implode(', ', $this->possibleLocations)
+        implode(', ', self::$supportedLocations)
       ));
     }
 
@@ -441,8 +427,7 @@ class AmazonECS
    */
   public function category($category = null)
   {
-    if (null === $category)
-    {
+    if (null === $category) {
       return isset($this->requestConfig['category']) ? $this->requestConfig['category'] : null;
     }
 
@@ -460,8 +445,7 @@ class AmazonECS
    */
   public function responseGroup($responseGroup = null)
   {
-    if (null === $responseGroup)
-    {
+    if (null === $responseGroup) {
       return $this->responseConfig['responseGroup'];
     }
 
@@ -480,8 +464,7 @@ class AmazonECS
    */
   public function returnType($type = null)
   {
-    if (null === $type)
-    {
+    if (null === $type) {
       return $this->responseConfig['returnType'];
     }
 
@@ -500,8 +483,7 @@ class AmazonECS
    */
   public function associateTag($associateTag = null)
   {
-    if (null === $associateTag)
-    {
+    if (null === $associateTag) {
       return $this->requestConfig['associateTag'];
     }
 
@@ -528,8 +510,7 @@ class AmazonECS
    */
   public function page($page)
   {
-    if (false === is_numeric($page) || $page <= 0)
-    {
+    if (false === is_numeric($page) || $page <= 0) {
       throw new InvalidArgumentException(sprintf(
         '%s is an invalid page value. It has to be numeric and positive',
         $page
@@ -559,8 +540,7 @@ class AmazonECS
    */
   public function requestDelay($enable = null)
   {
-    if (false === is_null($enable) && true === is_bool($enable))
-    {
+    if (false === is_null($enable) && true === is_bool($enable)) {
       $this->requestConfig['requestDelay'] = $enable;
 
       return $this;
@@ -568,4 +548,21 @@ class AmazonECS
 
     return $this->requestConfig['requestDelay'];
   }
+  
+  /**
+   * @return string
+   */
+  public function getCountry()
+  {
+      return $this->responseConfig['country'];
+  }
+  
+  /**
+   * @return array
+   */
+  public static function getSupportedLocations()
+  {
+      return self::$supportedLocations;
+  }
+  
 }
