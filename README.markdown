@@ -1,4 +1,4 @@
-#Amazon ECS PHP Library Version 1.3
+# Amazon ECS PHP Library Version 1.3
 AmazonECS is a class which searchs products and fetchs information
 about it from tha amazon productdatabase.
 
@@ -15,7 +15,7 @@ These operations could be expanded with extra prarmeters to specialize the query
 
 Requirement is the PHP extension SOAP.
 
-##Basic Usage:
+## Basic Usage:
 The usage is quite simple.
 Just require the class, create a new object of it and it's ready to use.
 Nothing else to configure.
@@ -35,13 +35,13 @@ var_dump($response);
 For some very simple examples go to the samples-folder and have a look at the sample files.
 These files contain all information you need for building querys successful.
 
-##Demo Site:
+## Demo Site:
 Simple Produkt Search: http://amazonecs.pixel-web.org
 
-##Webservice Documentation:
+## Webservice Documentation:
 Hosted on Amazon.com:
 http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/
 
-##More information:
+## More information:
 See wikipages for  more information:
 https://github.com/Exeu/Amazon-ECS-PHP-Library/wiki
